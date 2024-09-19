@@ -1,0 +1,7 @@
+git init .
+git remote add origin https://github.com/Sperper/DWEB.git
+git status
+git add .
+git status
+git commit -m "Actividad 01"
+git push origin master

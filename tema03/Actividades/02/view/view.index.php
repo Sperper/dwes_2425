@@ -20,7 +20,7 @@
 
         <!-- Cabecera  -->
         <header class="pb-3 mb-4 border-bottom">
-            <i class="bi bi-book"></i>
+        <i class="bi bi-calculator-fill"></i>
             <span class="fs-4">Actividad 3.2 - Tabla de multiplicar</span>
         </header>
 
@@ -30,18 +30,28 @@
 
             <thead>
                 <th>
-                    
+
                 </th>
-                <?php for ($i = 0; $i <= 10; $i++) {?>
-                <th>
-                    <?= $i ?>
-                </th>
+                <?php for ($i = 1; $i <= 10; $i++) { ?>
+                    <th>
+                        <?= $i ?>
+                    </th>
                 <?php } ?>
             </thead>
             <tbody>
-                <?php for ($i = 0; $i <= 10; $i++) {
-
-                }?>
+                <?php for ($i = 1; $i <= 10; $i++) { ?>
+                    <tr>
+                        <th>
+                            <?= $i ?>
+                        </th>
+                        <?php for ($j = 1; $j <= 10; $j++) { ?>
+                            <?php $resultado = $i * $j; ?>
+                            <td>
+                                <?= $resultado; ?>
+                            </td>
+                        <?php } ?>
+                    </tr>
+                <?php } ?>
             </tbody>
 
 

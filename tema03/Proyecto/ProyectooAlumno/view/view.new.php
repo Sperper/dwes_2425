@@ -28,6 +28,16 @@
 
         <!-- Furmulario nuevo alumnos -->
         <form action="new.php" method="POST">
+
+            <!-- id -->
+            <div class="mb-3 row">
+                <label for="inputid" class="col-sm-2 col-form-label">Id</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputid" name="id">
+                </div>
+            </div>
+
+
             <!-- Nombre -->
             <div class="mb-3 row">
                 <label for="inputnombre" class="col-sm-2 col-form-label">Nombre</label>
@@ -40,7 +50,7 @@
             <div class="mb-3 row">
                 <label for="inputPoblacion" class="col-sm-2 col-form-label">Poblacion</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPoblacion" name="Poblacion">
+                    <input type="text" class="form-control" id="inputPoblacion" name="poblacion">
                 </div>
             </div>
 

@@ -5,6 +5,9 @@
         descripcion: permite añadir un nuevo alumno a la tabla
     */
 
+    # Libreria
+    include 'libs/funciones.php';
+
     # Model
     include 'model/model.create.php';
 

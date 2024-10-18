@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Proyecto 31 - CRUD Alumnos Array</title>
+    <title>Actividad 3.3 - CRUD Libros Array</title>
 
     <!-- css bootstrap 533 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -22,7 +22,7 @@
         <header class="pb-3 mb-4 border-bottom">
             <span class="fs-5">
                 <i class="bi bi-people-fill"></i>
-                Proyecto 31 - CRUD Alumnos Array
+                Actividad 3.3 - CRUD Libros Array
             </span>
         </header>
 

@@ -43,35 +43,35 @@
             <div class="mb-3 row">
                 <label for="inputnombre" class="col-sm-2 col-form-label">Titulo:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputnombre" name="nombre">
+                    <input type="text" class="form-control" id="inputnombre" name="titulo">
                 </div>
             </div>
             <!-- poblacion  -->
             <div class="mb-3 row">
                 <label for="inputpoblacion" class="col-sm-2 col-form-label">Autor:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputpoblacion" name="poblacion">
+                    <input type="text" class="form-control" id="inputpoblacion" name="autor">
                 </div>
             </div>
             <!-- curso  -->
             <div class="mb-3 row">
                 <label for="inputcurso" class="col-sm-2 col-form-label">Editorial:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputcurso" name="curso">
+                    <input type="text" class="form-control" id="inputcurso" name="editorial">
                 </div>
             </div>
 
             <div class="mb-3 row">
                 <label for="inputcurso" class="col-sm-2 col-form-label">Genero:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputcurso" name="curso">
+                    <input type="text" class="form-control" id="inputcurso" name="genero">
                 </div>
             </div>
 
             <div class="mb-3 row">
                 <label for="inputcurso" class="col-sm-2 col-form-label">Precio:</label>
                 <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputcurso" name="curso">
+                    <input type="number" class="form-control" id="inputcurso" name="precio">
                 </div>
             </div>
 

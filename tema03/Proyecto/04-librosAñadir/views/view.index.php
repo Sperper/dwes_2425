@@ -21,7 +21,7 @@
         <!-- cabecera documento -->
         <header class="pb-3 mb-4 border-bottom">
             <span class="fs-5">
-                <i class="bi bi-people-fill"></i>
+                <i class="bi bi-book"></i>
                 Actividad 3.3 - CRUD Libros Array
             </span>
         </header>
@@ -57,7 +57,7 @@
                                 <li><a class="dropdown-item" href="#">Something else here</a></li>
                             </ul>
                         </li>
-                        
+
                     </ul>
                     <form class="d-flex" role="search">
                         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -93,7 +93,7 @@
                             <!-- Botones de Acción -->
                             <td>
                                 <i class="bi bi-trash-fill"></i></a>
-                            </td> 
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>

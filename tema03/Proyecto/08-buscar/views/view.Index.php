@@ -25,11 +25,11 @@
       <thead>
         <tr>
           <!-- Extraido del array -->
-          <!-- <?php foreach (array_keys($libros[0]) as $clave): ?>
+          <?php foreach (array_keys($libros[0]) as $clave): ?>
             <th>
               <?= $clave ?>
             </th>
-          <?php endforeach; ?> -->
+          <?php endforeach; ?>
 
           <!-- personalizado -->
           <th>Id</th>
@@ -72,7 +72,9 @@
           <td colspan="5">Nº Libros
             <?= count($libros) ?>
           </td>
+          <td></td>
         </tr>
+        
       </tfoot>
 
     </table>

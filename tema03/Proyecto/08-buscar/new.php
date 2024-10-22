@@ -4,14 +4,14 @@
 #Descripción: mostrar un formulario que permita añadir nuevo libro
 
 // Librería
-// include 'libs/crud_funciones.php';
+// include 'libs/funciones.php';
 
 // Model
 // include 'models/modelIndex.php';
 // include 'models/modelNuevo.php';
 
 // Cargo la vista
-include "views/view.Nuevo.php";
+include "views/view.New.php";
 
 
 

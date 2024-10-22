@@ -3,9 +3,6 @@
     /*
     Modelo: modelEditar.php
     Descripción: Edita un elemento de la tabla
-
-    Método GET:
-            - id: Identificador del elemento a eliminar
     */
 
     $libros = generar_tabla();

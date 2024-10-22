@@ -3,13 +3,6 @@
     /*
     Modelo: modelCreate.php
     Descripción: Añade un elemento a la tabla
-
-    Método POST:
-            - id: Identificador del elemento a eliminar
-            - titulo
-            - autor
-            - genero
-            - precio
     */
 
     $libros = generar_tabla();

@@ -42,7 +42,7 @@
             <?php endforeach; ?>
             <!-- boton eliminar  -->
             <td>
-              <a href="eliminar.php?id=<?= $libro['id'] ?>" title="Eliminar">
+              <a href="delete.php?id=<?= $libro['id'] ?>" title="Eliminar">
                 <i class="bi bi-trash3"></i></a>
 
               <!-- boton editar  -->

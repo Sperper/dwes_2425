@@ -3,9 +3,6 @@
     /*
     Modelo: modelEliminar.php
     Descripción: Elimina un elemento de la tabla
-
-    Método GET:
-            - id: Identificador del elemento a eliminar
     */
     $libros = generar_tabla();
 
@@ -20,7 +17,7 @@
         $libros = array_values($libros);
 
     } else {
-        echo "No se encontró el elemento a eliminar";
+        echo "No se encontró el elemento";
         exit();
     }
 ?>

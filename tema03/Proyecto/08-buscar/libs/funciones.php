@@ -1,16 +1,6 @@
 <?php
 
-/*
-function buscra_en_tabla()
-descripcion: busca u valor en una determinada columna de la tabla
-paramteros: 
-                - tabla
-                - nombre de la columna
-                - valor que quiero buscar
-    salida: 
-                - indice del array donde se encuentra el valor
-                - false en caso de que no lo encuentre
-*/
+# Busca en la tabla
 function buscar_en_tabla($tabla = [], $columna, $valor)
 {
     $columna_valores = array_column($tabla, $columna);
@@ -18,6 +8,7 @@ function buscar_en_tabla($tabla = [], $columna, $valor)
 
 }
 
+# Genera la tabla de libros
 function generar_tabla()
 {
     $tabla = [

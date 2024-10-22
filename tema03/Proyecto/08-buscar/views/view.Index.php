@@ -24,22 +24,12 @@
       <!-- Encabezado tabla -->
       <thead>
         <tr>
-          <!-- Extraido del array -->
-          <?php foreach (array_keys($libros[0]) as $clave): ?>
-            <th>
-              <?= $clave ?>
-            </th>
-          <?php endforeach; ?>
-
-          <!-- personalizado -->
           <th>Id</th>
           <th>Título</th>
           <th>Autor</th>
           <th>Género</th>
           <th>Precio</th>
           <th>Acciones</th>
-
-
         </tr>
       </thead>
       <tbody>

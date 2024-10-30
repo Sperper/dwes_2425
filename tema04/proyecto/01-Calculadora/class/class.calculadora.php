@@ -1,3 +1,4 @@
+
 <?php
 
 /*
@@ -29,6 +30,7 @@ class Class_calculadora
     {
         $this->operador = '+';
         $this->resultado = $this->valor1 + $this->valor2;
+        
     }
 
     # Metodo resta()
@@ -36,6 +38,7 @@ class Class_calculadora
     {
         $this->operador = '-';
         $this->resultado = $this->valor1 - $this->valor2;
+        
     }
 
     # Metodo division()
@@ -43,6 +46,7 @@ class Class_calculadora
     {
         $this->operador = '/';
         $this->resultado = $this->valor1 / $this->valor2;
+        
     }
 
     # Metodo multiplicacion()
@@ -50,6 +54,7 @@ class Class_calculadora
     {
         $this->operador = '*';
         $this->resultado = $this->valor1 * $this->valor2;
+        
     }
 
     # Método potencia()
@@ -57,5 +62,16 @@ class Class_calculadora
     {
         $this->operador = '^';
         $this->resultado = pow($this->valor1, $this->valor2);
+        
     }
+
+    public function getResultado() {
+        return $this->resultado;
+    }
+
+    public function getOperador() {
+        return $this->operador;
+    }
+
+    
 }

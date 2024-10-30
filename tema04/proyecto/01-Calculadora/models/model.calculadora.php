@@ -1,3 +1,4 @@
+
 <?php 
 
     $valor1 = $_GET['valor1'];
@@ -14,11 +15,10 @@
 
     # evalulo la operacion 
 
-    switch ($operacion) {
+    switch ($operador) {
         case 'sumar': $calc->suma(); break;
         case 'restar': $calc->resta(); break;
         case 'multiplicar': $calc->multiplicacion(); break;
         case 'dividir': $calc->division(); break;
-        default: echo 'Introduce una operacion valido';
+        default: echo 'Introduce una operacion valida';
     }
-

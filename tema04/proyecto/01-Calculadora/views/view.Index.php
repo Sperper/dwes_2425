@@ -34,6 +34,8 @@
         aria-describedby="inputGroup-sizing-default" step="0.01" placeholder="0.00" name="valor1">
     </div>
 
+    
+
     <!-- Valor 2 -->
     <div class="input-group mb-3">
       <span class="input-group-text" id="inputGroup-sizing-default" name="Valor2">Valor 2</span>
@@ -43,10 +45,10 @@
 
     <div class="btn-group" role="group">
       <button type="reset" class="btn btn-secondary">Borrar</button>
-      <button type="submit" class="btn btn-warning" name="operador" formaction="sumar.php">Sumar</button>
-      <button type="submit" class="btn btn-primary" name="operador" formaction="restar.php">Restar</button>
-      <button type="submit" class="btn btn-success" name="operador" formaction="division.php">Division</button>
-      <button type="submit" class="btn btn-danger" name="operador" formaction="producto.php">Producto</button>
+      <button type="submit" class="btn btn-warning" name="operador" value="sumar" formaction="calcular.php">Sumar</button>
+      <button type="submit" class="btn btn-primary" name="operador" value="restar" formaction="calcular.php">Restar</button>
+      <button type="submit" class="btn btn-success" name="operador" value="dividir" formaction="calcular.php">Division</button>
+      <button type="submit" class="btn btn-danger" name="operador" value="multiplicar" formaction="calcular.php">Producto</button>
     </div>
 
   </form>

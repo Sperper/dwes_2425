@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                     <!-- Mostramos cuerpo de la tabla -->
-                    <?php foreach ($array_articulos as $articulo): ?>
+                    <?php foreach ($array_articulos as $indice => $articulo): ?>
                         <tr>
                             <!-- Detalles de artículos -->
                             <td><?= $articulo->getId() ?></td>
@@ -46,9 +46,9 @@
                             
                             <!-- Columna de acciones -->
                             <td>
-                                <a href="eliminar.php?id=<?=$articulo->getId()?>" title="Eliminar" class="btn btn-danger"><i class="bi bi-trash-fill" onclick="return confirm('Seguro que desea eliminar el  artículo')"></i></a>
-                                <a href="editar.php?id=<?=$articulo->getId()?>" title="Editar" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
-                                <a href="mostrar.php?id=<?=$articulo->getId()?>" title="Mostrar" class="btn btn-warning"><i class="bi bi-eye-fill"></i></a>
+                                <a href="eliminar.php?indice=<?=$indice?>" title="Eliminar" class="btn btn-danger"><i class="bi bi-trash-fill" onclick="return confirm('Seguro que desea eliminar el  artículo')"></i></a>
+                                <a href="editar.php?indice=<?=$indice?>" title="Editar" class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
+                                <a href="mostrar.php?indice=<?=$indice?>" title="Mostrar" class="btn btn-warning"><i class="bi bi-eye-fill"></i></a>
                             </td>
                         </tr>
                     <?php endforeach; ?>   

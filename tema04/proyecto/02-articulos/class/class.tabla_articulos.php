@@ -201,4 +201,14 @@ class Class_tabla_articulos
 
     }
 
+    /*
+    metodo: react
+    descripcion: devuelve el articulo de la tabla a partir de su indice
+    */
+    function read($indice) {
+
+        return $this->tabla[$indice];
+
+    }
+
 }

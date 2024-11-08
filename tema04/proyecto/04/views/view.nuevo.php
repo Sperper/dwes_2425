@@ -13,28 +13,28 @@
         <!-- Encabezado proyecto -->
         <?php include 'views/partials/partial.header.php'; ?>
 
-        <legend>Formulario Editar Artículo</legend>
+        <legend>Formulario Nuevo Artículo</legend>
 
         <!-- Formulario Nuevo artículo -->
 
-        <form action="" method="POST">
+        <form action="create.php" method="POST">
 
             <!-- id -->
             <div class="mb-3">
                 <label for="id" class="form-label">Id</label>
-                <input type="text" class="form-control" name="id" value="<?= $articulo->getId() ?>">
+                <input type="text" class="form-control" name="id">
             </div>
 
             <!-- Descripción -->
             <div class="mb-3">
                 <label for="descripcion" class="form-label">Descripción</label>
-                <input type="text" class="form-control" name="descripcion" value="<?= $articulo->getDescripcion() ?>">
+                <input type="text" class="form-control" name="descripcion">
             </div>
 
             <!-- Modelo -->
             <div class="mb-3">
                 <label for="modelo" class="form-label">Modelo</label>
-                <input type="text" class="form-control" name="modelo" value="<?= $articulo->getModelo() ?>">
+                <input type="text" class="form-control" name="modelo">
             </div>
 
             <!-- Select Dinámico Marcas -->
@@ -55,13 +55,13 @@
             <!-- Unidades -->
             <div class="mb-3">
                 <label for="unidades" class="form-label">Unidades</label>
-                <input type="number" class="form-control" name="unidades" step="0.01" value="<?= $articulo->getId() ?>">
+                <input type="number" class="form-control" name="unidades" step="0.01">
             </div>
 
             <!-- Precio -->
             <div class="mb-3">
                 <label for="precio" class="form-label">Precio (€)</label>
-                <input type="number" class="form-control" name="precio" step="0.01" value="<?= $articulo->getId() ?>">
+                <input type="number" class="form-control" name="precio" step="0.01">
             </div>
 
             <!-- lista checbox dinámica categorias -->
@@ -71,7 +71,7 @@
                     <!-- muestro el array categorías -->
                     <?php foreach($categorias as $indice => $data): ?>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="categorias[]" value="<?= $indice ?>" <?= (in_array($indice, $articulo->getCategorias()) ? "checked" : null) ?>>
+                            <input class="form-check-input" type="checkbox" name="categorias[]" value="<?= $indice ?>">
                             <label class="form-check-label" for="">
                                 <?= $data ?>
                             </label>

@@ -49,7 +49,8 @@
 
               <a href="editar.php?id=<?= $libro['id'] ?>" title="Editar">
                 <i class="bi bi-pencil-square"></i></a>
-
+              
+              <!-- boton mostrar -->
               <a href="mostrar.php?id=<?= $libro['id'] ?>" title="Mostrar">
                 <i class="bi bi-clipboard2-plus"></i></a>
             </td>

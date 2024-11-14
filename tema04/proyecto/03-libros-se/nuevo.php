@@ -2,12 +2,12 @@
 
 /*
         controlador: nuevo.php
-        descripción: muestra formulario añadir artículo
+        descripción: muestra formulario añadir libro
     */
 
     # Clases
-    include 'class/class.articulo.php';
-    include 'class/class.tabla_articulos.php';
+    include 'class/class.libro.php';
+    include 'class/class.tabla_libros.php';
 
     # Librerias
 

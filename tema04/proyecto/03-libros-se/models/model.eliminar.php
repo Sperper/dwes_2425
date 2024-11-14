@@ -13,16 +13,16 @@
     $indice = $_GET['indice'];
 
     # Creo un objeto de la clase tabla de artículos
-    $obj_tabla_articulos = new Class_tabla_articulos();
+    $obj_tabla_libros = new Class_tabla_libros();
 
     #  Cargo los datos de artículos
-    $obj_tabla_articulos->getDatos();
+    $obj_tabla_libros->getDatos();
     
     # Cargo el array de marcas - lista desplegable dinámica
-    $marcas = $obj_tabla_articulos->getMarcas();
+    $materias = $obj_tabla_libros->getMaterias();
 
     # Obtener el objeto de la clase artículo correspondiente a ese índice
-    $obj_tabla_articulos->delete($indice);
+    $obj_tabla_libros->delete($indice);
 
     # Obtengo la tabla de artículos actualizada para la vista
-    $array_articulos = $obj_tabla_articulos->getTabla();
+    $array_libros = $obj_tabla_libros->tabla;

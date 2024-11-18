@@ -7,10 +7,10 @@
 
     # Clases
     include "class/class.profesor.php";
-    include "class/class.profesores.php";
+    include "class/class.tabla_profesores.php";
 
     # Modelo
     include "models/model.index.php";
 
     # Vista
-    include "views/view.editar.php";
+    include "views/view.index.php";

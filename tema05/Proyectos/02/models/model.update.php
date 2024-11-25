@@ -2,27 +2,27 @@
 
 /*
     Modelo: model.update.php
-    Descripción: actualiza los datos del registro a partir de los detalles del formulario
+    Descripción: actualiza los datos del libro
 
-    Método POST:
-                - id
-                - descripcion
-                - modelo
-                - genero
-                - materia
-                - unidades
-                - precio
-                - categorias
+     Métod POST:
+        - id
+        - titulo
+        - autor
+        - editorial 
+        - fecha_edicion
+        - materia (indice)
+        - etiquetas (array)
+        - precio
     
     Método GET:
 
-                - indice (indice de la tabla correspondiente a dicho registro)
+        - indice (indice de la tabla correspondiente a dicho registro)
 */
 
 # Símbolo monetario local
 setlocale(LC_MONETARY, "es_ES");
 
-# Cargo el indice del libro que voy a editar
+# Cargo el indice del  libro que voy a editar
 $indice = $_GET['indice'];
 
 # Cargo los detalles del  formulario
@@ -32,10 +32,10 @@ $autor = $_POST['autor'];
 $editorial = $_POST['editorial'];
 $fecha_edicion = $_POST['fecha_edicion'];
 $materia = $_POST['materia'];
-$etiqueta = $_POST['etiquetas'];
+$etiquetas = $_POST['etiquetas'];
 $precio = $_POST['precio'];
 
-# Crear un objeto de la clase artículos a partir de los detalles del formulario
+# Crear un objeto de la clase libro a partir de los detalles del formulario
 $libro = new Class_libro(
     $id,
     $titulo,
@@ -43,31 +43,29 @@ $libro = new Class_libro(
     $editorial,
     $fecha_edicion,
     $materia,
-    $etiqueta,
+    $etiquetas,
     $precio
 );
 
-
-# Creo un objeto de la clase tabla artículos
+# Crear un objeto de la clase tabla_libros
 $obj_tabla_libros = new Class_tabla_libros();
 
 # Cargo los libros
 $obj_tabla_libros->getDatos();
 
-# Extraer array de materias para la vista
+# Obtengo el array de materias
 $materias = $obj_tabla_libros->getMaterias();
 
-# Obtengo el array de etiquetas
+# Obtengo el  array de etiquetas
 $array_etiquetas = $obj_tabla_libros->getEtiquetas();
 
-
-# Actualizo
+# Actualizo los detalles del libro
 $obj_tabla_libros->update($libro, $indice);
 
-# Comando alternativo por la propiedad NO encapsulamiento
+# comando alternativo por la  propiedad NO encapsulamiento
 $obj_tabla_libros->tabla[$indice] = $libro;
 
-# Obtener la array artículos
+# Obtener el array libros
 $array_libros = $obj_tabla_libros->tabla;
 
 

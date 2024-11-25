@@ -29,11 +29,6 @@
                 <label for="apellidos" class="form-label">Apellidos</label>
                 <input type="text" class="form-control" name="apellidos">
             </div>
-            <!-- Fecha Nacimiento -->
-            <div class="mb-3">
-                <label for="fechaNac" class="form-label">Fecha Nacimiento</label>
-                <input type="date" class="form-control" name="fechaNac">
-            </div>
             <!-- Dni -->
             <div class="mb-3">
                 <label for="dni" class="form-label">Dni</label>
@@ -50,25 +45,12 @@
                 <label for="telefono" class="form-label">Teléfono</label>
                 <input type="tel" class="form-control" name="telefono">
             </div>
-            <!-- Nacionalidad -->
+            <!-- ciudad -->
             <div class="mb-3">
-                <label for="nacionalidad" class="form-label">Nacionalidad</label>
-                <input type="text" class="form-control" name="nacionalidad">
+                <label for="ciudad" class="form-label">Ciudad</label>
+                <input type="text" class="form-control" name="ciudad">
             </div>
 
-            <!-- Select Dinámico Cursos -->
-            <div class="mb-3">
-                <label for="curso" class="form-label">Curso</label>
-                <select class="form-select" name="id_curso">
-                    <option selected disabled>Seleccione curso</option>
-                    <!-- mostrar lista cucrsos -->
-                    <?php foreach ($cursos as $data): ?>
-                        <option value="<?= $data['id'] ?>">
-                            <?= $data['curso'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </div>
             <!-- botones de acción -->
             <a class="btn btn-secondary" href="index.php" role="button">Cancelar</a>
             <button type="reset" class="btn btn-danger">Borrar</button>

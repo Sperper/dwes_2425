@@ -1,22 +1,22 @@
 <?php
-/*
-    controlador: editar.php
-    descripción: muestra los detalles de un libro en modo edición
+    /*
+        controlador: editar.php
+        descripción: muestra los detalles de un libro en modo edición
 
-    parámetros:
+        parámetros:
 
-        - Método GET:
-            - id  id del libro que deseo editar
-*/
+            - Método GET:
+                - indice donde se ecuentra el libro dentro de la tabla
+    */
 
-# Clases
-include 'class/class.libro.php';
-include 'class/class.tabla_libros.php';
+    # Clases
+    include 'class/class.libro.php';
+    include 'class/class.tabla_libros.php';
 
-# Librerias
+    # Librerias
 
-# Model
-include 'models/model.editar.php';
+    # Model
+    include 'models/model.editar.php';
 
-# Vista
-include 'views/view.editar.php';
+    # Vista
+    include 'views/view.editar.php';

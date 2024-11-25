@@ -2,7 +2,7 @@
 
 /*
     archivo:class.alumno.php
-    nombre: define la clase alumno sin encapsulamiento
+    titulo: define la clase alumno sin encapsulamiento
 */
 
 class Class_alumno
@@ -15,7 +15,7 @@ class Class_alumno
     public $telefono;
     public $nacionalidad;
     public $dni;
-    public $fecha_nacimiento;
+    public $fechaNac;
     public $id_curso;
 
     public function __construct(
@@ -26,7 +26,7 @@ class Class_alumno
         $telefono = null,
         $nacionalidad = null,
         $dni = null,
-        $fecha_nacimiento = null,
+        $fechaNac = null,
         $id_curso = null
     ) {
         $this->id = $id;
@@ -36,14 +36,17 @@ class Class_alumno
         $this->telefono = $telefono;
         $this->nacionalidad = $nacionalidad;
         $this->dni = $dni;
-        $this->fecha_nacimiento = $fecha_nacimiento;
+        $this->fechaNac = $fechaNac;
         $this->id_curso = $id_curso;
     }
-    public function edad(){
-        $fechaActual = new DateTime();   //  Fecha Actual
-        $fechaNacimiento = new DateTime($this->fechaNac);   //  Fecha de nacimientos
-        $edad = $fechaNacimiento->diff($fechaActual);   //dIFERENCIA ENTRE FECHAS
-        return $edad->y; //  Devuelve solo los años
+
+    public function edad()
+    {
+        $fechaActual = new DateTime(); // Fecha actual
+        $fechaNacimiento = new DateTime($this->fechaNac); // Fecha de nacimiento
+        $edad = $fechaNacimiento->diff($fechaActual); // Diferencia entre las fechas
+        return $edad->y; // Devuelve solo los años
+
     }
 }
 

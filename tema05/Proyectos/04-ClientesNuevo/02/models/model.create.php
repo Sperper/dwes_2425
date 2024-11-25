@@ -12,32 +12,28 @@
   
     $nombre = $_POST['nombre'];
     $apellidos = $_POST['apellidos'];
-    $fechaNac = $_POST['fechaNac'];
     $email = $_POST['email'];
     $telefono = $_POST['telefono'];
-    $nacionalidad = $_POST['nacionalidad'];
+    $ciudad = $_POST['ciudad'];
     $dni = $_POST['dni'];
-    $id_curso = $_POST['id_curso'];
 
     # Validación
 
     # Creamos objeto de la clase Class_alumno
-    $alumno = new Class_alumno (
+    $cliente = new Class_cliente (
         null,
-        $nombre,
         $apellidos,
-        $email,
+        $nombre,
         $telefono,
-        $nacionalidad,
+        $ciudad,
         $dni,
-        $fechaNac, 
-        $id_curso
+        $email
     );
 
     # Añadimos alumno a la tabla
-    $alumnos = new Class_tabla_alumnos('localhost', 'root', '', 'fp');
+    $clientes = new Class_tabla_clientes('localhost', 'root', '', 'gesbank');
 
-    $alumnos->create($alumno);
+    $clientes->create($cliente);
 
     # Redirecciono al controlador index
     header("location: index.php");

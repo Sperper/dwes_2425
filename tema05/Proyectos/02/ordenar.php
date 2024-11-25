@@ -1,8 +1,8 @@
 <?php
 
-/*
-        controlador: update.php
-        descripción: actualiza los detalles de un artículo
+    /*
+        controlador: ordenar.php
+        descripción: ordena la tabla libros a partir de una de las  columnas
     */
 
     # Clases
@@ -12,7 +12,7 @@
     # Librerias
 
     # Model
-    include 'models/model.update.php';
+    include 'models/model.ordenar.php';
 
     # Vista
     include 'views/view.index.php';

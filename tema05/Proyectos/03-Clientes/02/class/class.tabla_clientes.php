@@ -5,34 +5,29 @@
     descripcion: define la clase que va a contener el array de objetos de la clase alumnos.
 */
 
-class Class_tabla_alumnos extends Class_conexion
+class Class_tabla_clientes extends Class_conexion
 {
 
 
     /*
-        método: getAlumnos()
+        método: getClientes()
         descripcion: devuelve un objeto de la clase mysqli_result con los 
-        detalles de los alumnos
+        detalles de los clientes
     */
 
-    public function getAlumnos()
+    public function getClientes()
     {
         $sql = "
             select 
-                alumnos.id,
-                alumnos.nombre, 
-                alumnos.apellidos,
-                alumnos.email,
-                alumnos.telefono,
-                alumnos.nacionalidad,
-                alumnos.dni,
-                timestampdiff(YEAR, alumnos.fechaNac, now()) as edad,
-                cursos.nombreCorto as curso
-            FROM 
-                alumnos 
-            INNER JOIN
-                cursos
-            ON alumnos.id_curso = cursos.id
+                id,
+                nombre, 
+                apellidos,
+                email,
+                telefono,
+                ciudad,
+                dni
+            from 
+                gesbank.clientes 
         ";
 
         // ejecuto comando sql

@@ -9,15 +9,12 @@
     setlocale(LC_MONETARY,"es_ES");
 
     # Creo un objeto de la clase tabla alumnos
-    $alumnos = new Class_tabla_alumnos(
+    $clientes = new Class_tabla_clientes(
             'localhost',
             'root',
             '',
-            'fp'
+            'gesbank'
     );
-    
-    # Cargo tabla de cursos
-    $cursos = $alumnos->getCursos();
 
     
 

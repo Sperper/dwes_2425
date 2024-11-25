@@ -1,38 +1,33 @@
 <?php
 
 /*
-    clase: class.tabla_alumnos.php
-    descripcion: define la clase que va a contener el array de objetos de la clase alumnos.
+    clase: class.tabla_clientes.php
+    descripcion: define la clase que va a contener el array de objetos de la clase clientes.
 */
 
-class Class_tabla_alumnos extends Class_conexion
+class Class_tabla_clientes extends Class_conexion
 {
 
 
     /*
-        método: getAlumnos()
+        método: getClientes()
         descripcion: devuelve un objeto de la clase mysqli_result con los 
-        detalles de los alumnos
+        detalles de los clientes
     */
 
-    public function getAlumnos()
+    public function getClientes()
     {
         $sql = "
             select 
-                alumnos.id,
-                alumnos.nombre, 
-                alumnos.apellidos,
-                alumnos.email,
-                alumnos.telefono,
-                alumnos.nacionalidad,
-                alumnos.dni,
-                timestampdiff(YEAR, alumnos.fechaNac, now()) as edad,
-                cursos.nombreCorto as curso
-            FROM 
-                alumnos 
-            INNER JOIN
-                cursos
-            ON alumnos.id_curso = cursos.id
+                id,
+                nombre, 
+                apellidos,
+                email,
+                telefono,
+                ciudad,
+                dni
+            from 
+                gesbank.clientes 
         ";
 
         // ejecuto comando sql
@@ -48,29 +43,27 @@ class Class_tabla_alumnos extends Class_conexion
 
     /*
         método: create()
-        descripcion: permite añadir un objeto de la clase alumno a la tabla
+        descripcion: permite añadir un objeto de la clase cliente a la tabla
         
         parámetros:
 
-            - $alumno - objeto de la clase alumno
+            - $cliente - objeto de la clase cliente
 
     */
-    public function create(Class_alumno $alumno)
+    public function create(Class_cliente $cliente)
     {
         // Crear la sentencia preparada
         $sql = "
         INSERT INTO 
-            alumnos( 
-                    nombre,
+            clientes( 
                     apellidos,
-                    email,
+                    nombre,
                     telefono,
-                    nacionalidad,
-                    dni, 
-                    fechaNac,
-                    id_curso
+                    ciudad,
+                    dni,
+                    email
                    )
-        VALUES    (?, ?, ?, ?, ?, ?, ?, ?)                            
+        VALUES    (?, ?, ?, ?, ?, ?)                            
         ";
 
         // ejecuto la sentenecia preprada
@@ -83,26 +76,22 @@ class Class_tabla_alumnos extends Class_conexion
 
         // vinculación de parámetros
         $stmt->bind_param(
-            'sssisssi',
-            $nombre,
+            'ssisss',
             $apellidos,
-            $email,
+            $nombre,
             $telefono,
-            $nacionalidad,
+            $ciudad,
             $dni,
-            $fechaNac,
-            $id_curso
+            $email,
         );
 
         // asignar valores
-        $nombre = $alumno->nombre;
-        $apellidos = $alumno->apellidos;
-        $email = $alumno->email;
-        $telefono = $alumno->telefono;
-        $nacionalidad = $alumno->nacionalidad;
-        $dni = $alumno->dni;
-        $fechaNac = $alumno->fechaNac;
-        $id_curso = $alumno->id_curso;
+        $nombre = $cliente->nombre;
+        $apellidos = $cliente->apellidos;
+        $email = $cliente->email;
+        $telefono = $cliente->telefono;
+        $ciudad = $cliente->ciudad;    
+        $dni = $cliente->dni;
 
         // ejecutamos
         $stmt->execute();

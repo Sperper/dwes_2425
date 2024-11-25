@@ -3,7 +3,7 @@
 
 <head>
     <?php include 'views/layouts/layout.head.html'; ?>
-    <title>Nuevo Libro - CRUD Libros </title>
+    <title>Editar Libro - CRUD Libros </title>
 </head>
 
 <body>
@@ -22,41 +22,49 @@
             <!-- id -->
             <div class="mb-3">
                 <label for="id" class="form-label">Id</label>
-                <input type="text" class="form-control" name="id" value="<?= $libro->id ?>">
+                <input type="text" class="form-control" name="id" value="<?= $libro->id?>" readonly>
             </div>
 
             <!-- titulo -->
             <div class="mb-3">
                 <label for="titulo" class="form-label">Titulo</label>
-                <input type="text" class="form-control" name="titulo" value="<?= $libro->titulo ?>">
+                <input type="text" class="form-control" name="titulo" value="<?= $libro->titulo?>">
             </div>
 
             <!-- autor -->
-            <div class=" mb-3">
+            <div class="mb-3">
                 <label for="autor" class="form-label">Autor</label>
-                <input type="text" class="form-control" name="autor" value="<?= $libro->autor ?>">
+                <input type="text" class="form-control" name="autor" value="<?= $libro->autor?>">
             </div>
 
-            <!-- Editorial -->
-            <div class=" mb-3">
+            <!-- editorial -->
+            <div class="mb-3">
                 <label for="editorial" class="form-label">Editorial</label>
-                <input type="text" class="form-control" name="editorial" value="<?= $libro->editorial ?>">
+                <input type="text" class="form-control" name="editorial" value="<?= $libro->editorial?>">
             </div>
 
-            <!-- Edición -->
-            <div class=" mb-3">
-                <label for="edicion" class="form-label">Edicion</label>
-                <input type="text" class="form-control" name="fecha_edicion" value="<?= $libro->fecha_edicion ?>">
+            <!-- fecha_edicion -->
+            <div class="mb-3">
+                <label for="fecha_edicion" class="form-label">Fecha Edición</label>
+                <input type="date" class="form-control" name="fecha_edicion" value="<?= $libro->fecha_edicion?>">
+            </div>
+
+            <!-- Precio -->
+            <div class="mb-3">
+                <label for="precio" class="form-label">Precio (€)</label>
+                <input type="number" class="form-control" name="precio" step="0.01" value="<?= $libro->precio?>">
             </div>
 
             <!-- Select Dinámico Materias -->
-            <div class=" mb-3">
-                <label for="materia" class="form-label">Materias</label>
+            <div class="mb-3">
+                <label for="materia" class="form-label">Materia</label>
                 <select class="form-select" name="materia" id="materia">
-                    <option selected disabled>Seleccione una Materia</option>
-                    <!-- mostrar lista marcas -->
+                    <!-- <option selected disabled>Seleccione una materia</option> -->
+                    <!-- mostrar lista materias -->
                     <?php foreach ($materias as $indice => $data): ?>
-                        <option value="<?= $indice ?>" <?= (($libro->materia == $indice) ? 'selected' : null) ?>>
+                        <option value="<?= $indice ?>"
+                        <?= ($libro->materia == $indice)? 'selected': null ?>
+                        >
                             <?= $data ?>
                         </option>
                     <?php endforeach; ?>
@@ -64,7 +72,7 @@
 
             </div>
 
-            <!-- lista checkbox dinámica etiquetas -->
+            <!-- lista checbox dinámica etiquetas -->
             <div class="mb-3">
                 <label for="etiquetas" class="form-label">Seleccione las Etiquetas</label>
                 <div class="form-control">
@@ -72,8 +80,8 @@
                     <?php foreach ($etiquetas as $indice => $data): ?>
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" name="etiquetas[]" value="<?= $indice ?>"
-                                <?= (in_array($indice, $libro->etiquetas) ? 'checked': null) ?>
-                                >
+                            <?= in_array($indice, $libro->etiquetas)? 'checked': null ?>
+                            >
                             <label class="form-check-label" for="">
                                 <?= $data ?>
                             </label>
@@ -81,26 +89,16 @@
                     <?php endforeach; ?>
 
                 </div>
-
             </div>
 
-            <!-- Precio -->
-            <div class="mb-3">
-                <label for="precio" class="form-label">Precio (€)</label>
-                <input type="number" class="form-control" name="precio" step="0.01" value="<?= $libro->precio ?>">
-            </div>
+            <!-- botones de acción -->
+            <a class="btn btn-secondary" href="index.php" role="button">Cancelar</a>
+            <button type="reset" class="btn btn-danger">Borrar</button>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
 
+        </form>
 
-    </div>
-
-    <!-- botones de acción -->
-    <a class="btn btn-secondary" href="index.php" role="button">Cancelar</a>
-    <button type="reset" class="btn btn-danger">Borrar</button>
-    <button type="submit" class="btn btn-primary">Actualizar</button>
-
-    </form>
-
-    <!-- Fin formulario nuevo artículo -->
+        <!-- Fin formulario nuevo artículo -->
 
 
 

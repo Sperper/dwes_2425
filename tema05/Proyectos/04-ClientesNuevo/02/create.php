@@ -10,9 +10,9 @@
     */
 
     # Clases
-    include 'class/class.alumno.php';
+    include 'class/class.cliente.php';
     include 'class/class.conexion.php';
-    include 'class/class.tabla_alumnos.php';
+    include 'class/class.tabla_clientes.php';
 
     # Librerias
 

@@ -2,16 +2,16 @@
 
     /*
         controlador: filtrar.php
-        descripción: muestra los alumnos que cumplen una expresión de búsqueda
+        descripción: muestra los clientes que cumplen una expresión de búsqueda
     */
 
     # Archivos de configuración
     include 'config/configDB.php';
 
     # Clases
-    include 'class/class.alumno.php';
+    include 'class/class.cliente.php';
     include 'class/class.conexion.php';
-    include 'class/class.tabla_alumnos.php';
+    include 'class/class.tabla_clientes.php';
 
     # Librerias
 

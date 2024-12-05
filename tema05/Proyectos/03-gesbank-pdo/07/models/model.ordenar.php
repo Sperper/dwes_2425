@@ -2,11 +2,11 @@
 
     /*
         Modelo: model.ordenar.php
-        Descripción: ordena los alumnos por algún criterio
+        Descripción: ordena los clientes por algún criterio
 
         Parámetros:
             - criterio: el número que identifica la posición de la columna en
-            la tabla alumnos
+            la tabla clientes
     */
 
     # Símbolo monetario local
@@ -15,11 +15,11 @@
     # Obtener el criterio de ordenación
     $criterio = $_GET['criterio'];
 
-    # Creo un objeto de la clase tabla alumnos
-    $tabla_alumnos = new Class_tabla_alumnos();
+    # Creo un objeto de la clase tabla clientes
+    $conexion = new Class_tabla_clientes();
 
     # Ejecuto el  método order() y devuelve objeto de la clase
     # mysqli_result
-    $alumnos = $tabla_alumnos->order($criterio);
+    $stmt_clientes = $conexion->order($criterio);
 
     

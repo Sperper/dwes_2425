@@ -210,15 +210,15 @@ class Class_tabla_clientes extends Class_conexion
             $stmt = $this->pdo->prepare($sql);
 
             // vinculación de parámetros
-           // vinculación de parámetros con las propiedades del objeto
-           $stmt->bindParam(':apellidos', $cliente->apellidos, PDO::PARAM_STR, 45);
-           $stmt->bindParam(':nombre', $cliente->nombre, PDO::PARAM_STR, 20);
-           $stmt->bindParam(':telefono', $cliente->telefono, PDO::PARAM_STR, 9);
-           $stmt->bindParam(':ciudad', $cliente->ciudad, PDO::PARAM_STR, 20);
-           $stmt->bindParam(':dni', $cliente->dni, PDO::PARAM_STR, 9);
-           $stmt->bindParam(':email', $cliente->email, PDO::PARAM_STR, 45);
+            // vinculación de parámetros con las propiedades del objeto
+            $stmt->bindParam(':apellidos', $cliente->apellidos, PDO::PARAM_STR, 45);
+            $stmt->bindParam(':nombre', $cliente->nombre, PDO::PARAM_STR, 20);
+            $stmt->bindParam(':telefono', $cliente->telefono, PDO::PARAM_STR, 9);
+            $stmt->bindParam(':ciudad', $cliente->ciudad, PDO::PARAM_STR, 20);
+            $stmt->bindParam(':dni', $cliente->dni, PDO::PARAM_STR, 9);
+            $stmt->bindParam(':email', $cliente->email, PDO::PARAM_STR, 45);
 
-           $stmt->bindParam(':id', $cliente->id, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $cliente->id, PDO::PARAM_INT);
 
             // ejecutamos
             $stmt->execute();
@@ -238,7 +238,7 @@ class Class_tabla_clientes extends Class_conexion
         }
     }
 
-   
+
 
     /*
         método: order()
@@ -257,41 +257,35 @@ class Class_tabla_clientes extends Class_conexion
 
             // sentencia sql
             $sql = "
-            select 
+            SELECT 
                 clientes.id,
-                clientes.nombre, 
-                clientes.apellidos,
-                clientes.email,
+                CONCAT_WS(', ', clientes.apellidos, clientes.nombre) as cliente,
                 clientes.telefono,
-                clientes.nacionalidad,
+                clientes.ciudad,
                 clientes.dni,
-                timestampdiff(YEAR, clientes.fechaNac, now()) as edad,
-                cursos.nombreCorto as curso
-            FROM 
-                clientes 
-            INNER JOIN
-                cursos
-            ON clientes.id_curso = cursos.id
-            ORDER BY ?
+                clientes.email,
+                SUM(cuentas.saldo) saldo
+            FROM
+                clientes
+                    LEFT JOIN
+                cuentas ON cuentas.id_cliente = clientes.id
+            GROUP BY clientes.id
+            ORDER BY :criterio
         ";
 
             // ejecuto prepare
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
 
             // vincular parámetros
-            $stmt->bindParam(
-                'i',
-                $criterio
-            );
+            $stmt->bindParam(':criterio', $criterio, PDO::PARAM_INT);
 
             // ejecutamos
             $stmt->execute();
 
-            // Devolvemos objeto de la clase  mysqli_result
-            $result = $stmt->get_result();
+            // Definimos el tipo de fetch
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
 
-            // Devolvemos mysqli_result
-            return $result;
+            return $stmt;
         } catch (mysqli_sql_exception $e) {
 
             // error de  base dedatos
@@ -313,8 +307,8 @@ class Class_tabla_clientes extends Class_conexion
 
     /*
         método: order()
-        descripcion: devuelve un objeto de la clase mysqli_result con los 
-        detalles de los clientes  ordenados por un criterio.
+        descripcion: devuelve los registros de clientes que contengan una expresion 
+        de busqueda
 
         Parámetros:
 
@@ -328,59 +322,49 @@ class Class_tabla_clientes extends Class_conexion
 
             // sentencia sql
             $sql = "
-            select 
+             SELECT 
                 clientes.id,
-                clientes.nombre, 
-                clientes.apellidos,
-                clientes.email,
+                CONCAT_WS(', ', clientes.apellidos, clientes.nombre) as cliente,
                 clientes.telefono,
-                clientes.nacionalidad,
+                clientes.ciudad,
                 clientes.dni,
-                timestampdiff(YEAR, clientes.fechaNac, now()) as edad,
-                cursos.nombreCorto as curso
-            FROM 
-                clientes 
-            INNER JOIN
-                cursos
-            ON clientes.id_curso = cursos.id
+                clientes.email,
+                SUM(cuentas.saldo) saldo
+            FROM
+                clientes
+                    LEFT JOIN
+                cuentas ON cuentas.id_cliente = clientes.id
             WHERE 
             CONCAT_WS(' ',
-                        clientes.id, 
-                        clientes.nombre,
-                        clientes.apellidos, 
-                        clientes.email, 
-                        clientes.telefono, 
-                        clientes.nacionalidad, 
-                        clientes.dni, 
-                        TIMESTAMPDIFF(YEAR, clientes.fechaNac, NOW()),
-                        clientes.fechaNac, 
-                        cursos.nombreCorto) 
-            LIKE ?
-
-            ORDER BY clientes.id
+                    clientes.id,
+                    CONCAT_WS(', ', clientes.apellidos, clientes.nombre),
+                    clientes.telefono,
+                    clientes.ciudad,
+                    clientes.dni,
+                    clientes.email,
+                    saldo
+            LIKE :expresion
+            GROUP BY clientes.id
+            ORDER BY clientes.id;
         ";
 
             // ejecuto prepare
-            $stmt = $this->db->prepare($sql);
+            $stmt = $this->pdo->prepare($sql);
 
             // arreglamos expresión para operador like
             $expresion = '%' . $expresion . '%';
 
             // vincular parámetros
-            $stmt->bindParam(
-                's',
-                $expresion
-            );
+            $stmt->bindParam(':expresion', $expresion, PDO::PARAM_STR, 255);
+
+            // tipo fetch
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
 
             // ejecutamos
             $stmt->execute();
-
-            // Devolvemos objeto de la clase  mysqli_result
-            $result = $stmt->get_result();
-
-            // Devolvemos mysqli_result
-            return $result;
-        } catch (mysqli_sql_exception $e) {
+            
+            return $stmt;
+        } catch (PDOException $e) {
 
             // error de  base dedatos
             include 'views/partials/errorDB.php';

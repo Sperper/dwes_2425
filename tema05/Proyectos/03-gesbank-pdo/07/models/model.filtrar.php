@@ -2,7 +2,7 @@
 
     /*
         Modelo: model.filtrar.php
-        Descripción: muestra los alumnos que contienen el patrón de búsqueda. 
+        Descripción: muestra los clientes que contienen el patrón de búsqueda. 
                      el registro seleccionado debe contener dicha expresión en cualquiera de los campos
 
         Parámetros:
@@ -16,11 +16,11 @@
     # Obtener el criterio de ordenación
     $expresion = $_GET['expresion'];
 
-    # Creo un objeto de la clase tabla alumnos
-    $tabla_alumnos = new Class_tabla_alumnos();
+    # Creo un objeto de la clase tabla clientes
+    $conexion = new Class_tabla_clientes();
 
     # Ejecuto el  método filter() y devuelve objeto de la clase
     # mysqli_result
-    $alumnos = $tabla_alumnos->filter($expresion);
+    $stmt_clientes = $conexion->filter($expresion);
 
     

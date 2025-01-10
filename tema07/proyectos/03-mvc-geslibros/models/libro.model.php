@@ -33,7 +33,7 @@ class libroModel extends Model
                 libros.isbn,
                 autores.nombre autor,
                 editoriales.nombre editorial,
-                libros.generos_id as generos
+                GROUP_CONCAT(generos.tema) generos
             FROM 
                 libros 
             INNER JOIN
@@ -44,6 +44,12 @@ class libroModel extends Model
                 editoriales
             ON
                 libros.editorial_id = editoriales.id
+            LEFT JOIN
+                generos
+            ON
+                FIND_IN_SET(generos.id, libros.generos_id)
+            GROUP BY
+                libros.id
             ORDER BY
                 libros.id";
 
@@ -160,6 +166,54 @@ class libroModel extends Model
             $this->db = null;
         }
     }
+
+
+    /*
+        método: get_generos()
+
+        Extre los detalles de los generos.
+    */
+    public function get_generos() {
+        try {
+            $sql = "SELECT 
+                        id,
+                        tema as genero
+                    FROM 
+                        generos
+                    ORDER BY
+                    2
+            ";
+
+            // conectamos con la base de datos
+            $conexion = $this->db->connect();
+
+            // ejecuto prepare
+            $stmt = $conexion->prepare($sql);
+
+            // establezco tipo fetch
+            $stmt->setFetchMode(PDO::FETCH_KEY_PAIR);
+
+            // ejecutamos
+            $stmt->execute();
+
+            // devuelvo objeto stmtatement
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+
+            // error base de datos
+            require 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+        }
+    }
+
+    /*
+        método: get_nombres_generos()
+        
+        
+
+    */
 
     /*
         método: create

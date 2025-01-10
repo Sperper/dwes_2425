@@ -24,38 +24,38 @@
             </div>
             <div class="card-body">
                 <!-- Formulario de alumnos  -->
-                <form action="<?= URL ?>alumno/create" method="POST">
+                <form action="<?= URL ?>libro/create" method="POST">
 
-                    <!-- Nombre -->
+                    <!-- titulo -->
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="nombre">
+                        <label for="titulo" class="form-label">Titulo</label>
+                        <input type="text" class="form-control" name="titulo">
                     </div>
-                    <!-- Apellidos -->
+                    <!-- precio -->
                     <div class="mb-3">
-                        <label for="apellidos" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" name="apellidos">
+                        <label for="precio" class="form-label">Precio</label>
+                        <input type="text" class="form-control" name="precio">
                     </div>
-                    <!-- Fecha Nacimiento -->
+                    <!-- Precio -->
                     <div class="mb-3">
-                        <label for="fechaNac" class="form-label">Fecha Nacimiento</label>
-                        <input type="date" class="form-control" name="fechaNac">
+                        <label for="Precio" class="form-label">Stock</label>
+                        <input type="date" class="form-control" name="Precio">
                     </div>
-                    <!-- Dni -->
+                    <!-- Fecha Edicion -->
                     <div class="mb-3">
-                        <label for="dni" class="form-label">Dni</label>
-                        <input type="text" class="form-control" name="dni">
+                        <label for="fecha_edicion" class="form-label">Fecha Edicion</label>
+                        <input type="text" class="form-control" name="fecha_edicion">
                     </div>
 
-                    <!-- Email -->
+                    <!-- isbn -->
                     <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email">
+                        <label for="isbn" class="form-label">ISBN</label>
+                        <input type="isbn" class="form-control" name="isbn">
                     </div>
-                    <!-- Telefono -->
+                    <!-- autor -->
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control" name="telefono">
+                        <label for="autor" class="form-label">Autor</label>
+                        <input type="tel" class="form-control" name="autor">
                     </div>
                     <!-- Nacionalidad -->
                     <div class="mb-3">

@@ -23,7 +23,9 @@ class Libro extends Controller
         $this->view->title = "Gestión de Libros";
 
         // Creo la propiedad libros para usar en la vista
-        $this->view->libros = $this->model->get(); 
+        $this->view->libros = $this->model->get();
+
+        
 
         $this->view->render('libro/main/index');
     }

@@ -106,8 +106,8 @@ class Class_tabla_libros extends Class_conexion
     public function get_generos_asociados($generos_id)
     {
         try {
-
-            $generos = $this->get_generos();
+            $stmt = $this->get_generos();
+            $generos = $stmt->fetchAll();
 
             $generos_nominativos = [];
 

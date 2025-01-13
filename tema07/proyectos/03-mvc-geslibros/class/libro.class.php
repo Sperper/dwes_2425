@@ -18,6 +18,7 @@
         public $autor_id;
         public $editorial_id;
         public $generos_id;
+        
         public function __construct(
             $id = null,
             $titulo = null,

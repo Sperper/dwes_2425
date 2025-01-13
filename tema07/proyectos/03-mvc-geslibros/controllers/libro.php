@@ -25,7 +25,7 @@ class Libro extends Controller
         // Creo la propiedad libros para usar en la vista
         $this->view->libros = $this->model->get();
 
-        
+
 
         $this->view->render('libro/main/index');
     }
@@ -41,13 +41,19 @@ class Libro extends Controller
     {
 
         // Creo la propiead título
-        $this->view->title = "Añadir - Gestión de Alumnos";
+        $this->view->title = "Añadir - Gestión de Libros";
 
-        // Creo la propiedad cursos en la vista
-        $this->view->cursos = $this->model->get_cursos();
+        // Creo la propiedad autores en la vista
+        $this->view->autores = $this->model->get_autores();
+
+        // Creo la propiedad editoriales en la vista
+        $this->view->editoriales = $this->model->get_editoriales();
+
+        // Creo la propiedad géneros en la vista
+        $this->view->generos = $this->model->get_generos();
 
         // Cargo la vista asociada a este método
-        $this->view->render('alumno/nuevo/index');
+        $this->view->render('libro/nuevo/index');
     }
 
     /*
@@ -62,36 +68,35 @@ class Libro extends Controller
     {
 
         // Recogemos los detalles del formulario
-        $nombre = $_POST['nombre'];
-        $apellidos = $_POST['apellidos'];
-        $fechaNac = $_POST['fechaNac'];
-        $dni = $_POST['dni'];
-        $email = $_POST['email'];
-        $telefono = $_POST['telefono'];
-        $nacionalidad = $_POST['nacionalidad'];
-        $id_curso = $_POST['id_curso'];
+        $titulo = $_POST['titulo'];
+        $precio = $_POST['precio'];
+        $stock = $_POST['stock'];
+        $fecha_edicion = $_POST['fecha_edicion'];
+        $isbn = $_POST['isbn'];
+        $id_editorial = $_POST['id_editorial'];
+        $id_autor = $_POST['id_autor'];
+        $id_generos = $_POST['generos'];
 
-        // Creamos un objeto de la clase alumno
-        $alumno = new classAlumno(
+
+        // Creamos un objeto de la clase libro
+        $libro = new classLibro(
+
             null,
-            $nombre,
-            $apellidos,
-            $email,
-            $telefono,
-            null,
-            null,
-            null,
-            $nacionalidad,
-            $dni,
-            $fechaNac,
-            $id_curso
+            $titulo,
+            $precio,
+            $stock,
+            $fecha_edicion,
+            $isbn,
+            $id_autor,
+            $id_editorial,
+            $id_generos
         );
 
-        // Añadimos alumno a la tabla
-        $this->model->create($alumno);
+        // Añadimos libro a la tabla
+        $this->model->create($libro);
 
-        // redireciona al main de alumno
-        header('location:' . URL . 'alumno');
+        // redireciona al main de libro
+        header('location:' . URL . 'libro');
     }
 
     /*
@@ -119,17 +124,23 @@ class Libro extends Controller
         $this->view->id = $id;
 
         # title
-        $this->view->title = "Formulario Editar - Gestión de Alumnos";
+        $this->view->title = "Formulario Editar - Gestión de Libros";
 
         # obtener objeto de la clase alumno con el id pasado
         // Necesito crear el método read en el modelo
-        $this->view->alumno = $this->model->read($id);
+        $this->view->libro = $this->model->read($id);
 
-        # obtener los cursos
-        $this->view->cursos = $this->model->get_cursos();
+        // Creo la propiedad autores en la vista
+        $this->view->autores = $this->model->get_autores();
+
+        // Creo la propiedad editoriales en la vista
+        $this->view->editoriales = $this->model->get_editoriales();
+
+        // Creo la propiedad géneros en la vista
+        $this->view->generos = $this->model->get_generos();
 
         # cargo la vista
-        $this->view->render('alumno/editar/index');
+        $this->view->render('libro/editar/index');
     }
 
     /*
@@ -150,39 +161,36 @@ class Libro extends Controller
         $id = $param[0];
 
         // Recogemos los detalles del formulario
-        $nombre = $_POST['nombre'];
-        $apellidos = $_POST['apellidos'];
-        $fechaNac = $_POST['fechaNac'];
-        $dni = $_POST['dni'];
-        $email = $_POST['email'];
-        $telefono = $_POST['telefono'];
-        $nacionalidad = $_POST['nacionalidad'];
-        $id_curso = $_POST['id_curso'];
+        $titulo = $_POST['titulo'];
+        $precio = $_POST['precio'];
+        $stock = $_POST['stock'];
+        $fecha_edicion = $_POST['fecha_edicion'];
+        $isbn = $_POST['isbn'];
+        $id_editorial = $_POST['id_editorial'];
+        $id_autor = $_POST['id_autor'];
+        $id_generos = $_POST['generos'];
 
         # Con los detalles formulario creo objeto alumno
-        $alumno = new classAlumno(
+        $libro = new classLibro(
 
             null,
-            $nombre,
-            $apellidos,
-            $email,
-            $telefono,
-            null,
-            null,
-            null,
-            $nacionalidad,
-            $dni,
-            $fechaNac,
-            $id_curso
+            $titulo,
+            $precio,
+            $stock,
+            $fecha_edicion,
+            $isbn,
+            $id_autor,
+            $id_editorial,
+            $id_generos
 
         );
 
         # Actualizo base  de datos
         // Necesito crear el método update en el modelo
-        $this->model->update($alumno, $id);
+        $this->model->update($libro, $id);
 
         # Cargo el controlador principal de alumno
-        header('location:' . URL . 'alumno');
+        header('location:' . URL . 'libro');
     }
 
     /*
@@ -260,7 +268,7 @@ class Libro extends Controller
         # Cargo el título
         $this->view->title = "Filtrar por: {$expresion} - Gestión de Alumnos";
 
-        
+
 
         # Obtengo los alumnos que coinciden con la expresión de búsqueda
         $this->view->alumnos = $this->model->filter($expresion);

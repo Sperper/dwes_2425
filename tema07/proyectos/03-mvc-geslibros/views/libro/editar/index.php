@@ -24,70 +24,92 @@
             </div>
             <div class="card-body">
                 <!-- Formulario de alumnos  -->
-                <!-- Enviar al controlador update con el id del alumno -->
-                <form action="<?= URL ?>alumno/update/<?= $this->id ?>" method="POST">
+                <form action="<?= URL ?>libro/update/<?= $this->id ?>" method="POST">
 
                     <!-- id oculto -->
-                    <!-- Tengo que pasar el id oculto para que el controlador pueda validar doblemente el id -->
-                    <input type="number" class="form-control" name="id" value="<?= $this->alumno->id ?>" hidden>
+                    <input type="number" class="form-control" name="id" value="<?= $this->libro->id ?>" hidden>
 
-                    <!-- Nombre -->
+                    <!-- titulo -->
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" name="nombre" value="<?= $this->alumno->nombre ?>">
+                        <label for="titulo" class="form-label">Titulo</label>
+                        <input type="text" class="form-control" name="titulo" value="<?= $this->libro->titulo ?>">
                     </div>
-                    <!-- Apellidos -->
+                    <!-- precio -->
                     <div class="mb-3">
-                        <label for="apellidos" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control" name="apellidos" value="<?= $this->alumno->apellidos ?>">
+                        <label for="precio" class="form-label">Precio</label>
+                        <input type="number" class="form-control" name="precio" value="<?= $this->libro->precio ?>">
                     </div>
-                    <!-- Fecha Nacimiento -->
+                    <!-- Precio -->
                     <div class="mb-3">
-                        <label for="fechaNac" class="form-label">Fecha Nacimiento</label>
-                        <input type="date" class="form-control" name="fechaNac" value="<?= $this->alumno->fechaNac ?>">
+                        <label for="Precio" class="form-label">Stock</label>
+                        <input type="number" class="form-control" name="stock" value="<?= $this->libro->stock ?>">
                     </div>
-                    <!-- Dni -->
+                    <!-- Fecha Edicion -->
                     <div class="mb-3">
-                        <label for="dni" class="form-label">Dni</label>
-                        <input type="text" class="form-control" name="dni" value="<?= $this->alumno->dni ?>">
-                    </div>
-
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="<?= $this->alumno->email ?>">
-                    </div>
-                    <!-- Telefono -->
-                    <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control" name="telefono" value="<?= $this->alumno->telefono ?>">
-                    </div>
-                    <!-- Nacionalidad -->
-                    <div class="mb-3">
-                        <label for="nacionalidad" class="form-label">Nacionalidad</label>
-                        <input type="text" class="form-control" name="nacionalidad" value="<?= $this->alumno->nacionalidad ?>">
+                        <label for="fecha_edicion" class="form-label">Fecha Edicion</label>
+                        <input type="date" class="form-control" name="fecha_edicion" value="<?= $this->libro->fecha_edicion ?>">
                     </div>
 
-                    <!-- Select Dinámico Cursos -->
+                    <!-- isbn -->
                     <div class="mb-3">
-                        <label for="curso" class="form-label">Curso</label>
-                        <select class="form-select" name="id_curso">
-                            <option selected disabled>Seleccione curso</option>
-                            <!-- mostrar lista cucrsos -->
-                            <?php foreach ($this->cursos as $indice => $data): ?>
-                                <option value="<?= $indice ?>" 
-                                    <?php if ($indice == $this->alumno->id_curso) echo 'selected' ?>>
+                        <label for="isbn" class="form-label">ISBN</label>
+                        <input type="text" class="form-control" name="isbn" value="<?= $this->libro->isbn ?>">
+                    </div>
+
+                    <!-- Select Dinámico Editoriales -->
+                    <div class="mb-3">
+                        <label for="curso" class="form-label">Editoriales</label>
+                        <select class="form-select" name="id_editorial">
+                            <option selected disabled>Seleccione editoriales</option>
+                            <!-- mostrar lista editoriales -->
+                            <?php foreach ($this->editoriales as $indice => $data): ?>
+                                <option value="<?= $indice ?>"
+                                    <?php if ($indice == $this->libro->editorial_id) echo 'selected' ?>>
                                     <?= $data ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
+
+                    <!-- Select Dinámico Autores -->
+                    <div class="mb-3">
+                        <label for="curso" class="form-label">Autor</label>
+                        <select class="form-select" name="id_autor">
+                            <option selected disabled>Seleccione autor</option>
+                            <!-- mostrar lista cucrsos -->
+                            <?php foreach ($this->autores as $indice => $data): ?>
+                                <option value="<?= $indice ?>"
+                                    <?php if ($indice == $this->libro->autor_id) echo 'selected' ?>>
+                                    <?= $data ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <!-- Checkbox Dinámico Generos -->
+                    <div class="mb-3">
+                        <label for="etiquetas" class="form-label">Seleccione los Generos</label>
+                        <div class="form-control">
+                            <!-- muestro el array generos -->
+                            <?php foreach ($this->generos as $indice => $data): ?>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="generos[]" value="<?= $indice ?>"
+                                    <?php if (in_array($indice, explode(',', $this->libro->generos_id))) echo 'checked' ?>>
+                                    <label class="form-check-label" for="" >
+                                        <?= $data ?>
+                                    </label>
+                                </div>
+                            <?php endforeach; ?>
+
+                        </div>
+                    </div>
+
             </div>
             <div class="card-footer">
                 <!-- botones de acción -->
                 <a class="btn btn-secondary" href="<?= URL ?>alumno" role="button">Cancelar</a>
                 <button type="reset" class="btn btn-danger">Borrar</button>
-                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <button type="submit" class="btn btn-primary">Enviar</button>
             </div>
             </form>
             <!-- Fin formulario nuevo artículo -->

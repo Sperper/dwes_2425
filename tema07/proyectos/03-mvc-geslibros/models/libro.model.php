@@ -173,7 +173,8 @@ class libroModel extends Model
 
         Extre los detalles de los generos.
     */
-    public function get_generos() {
+    public function get_generos()
+    {
         try {
             $sql = "SELECT 
                         id,
@@ -261,7 +262,7 @@ class libroModel extends Model
             $stmt->bindParam(':autor_id', $libro->autor_id, PDO::PARAM_INT);
             $stmt->bindParam(':editorial_id', $libro->editorial_id, PDO::PARAM_INT);
             $stmt->bindParam(':generos_id', $libro->generos_id, PDO::PARAM_STR);
-            
+
 
             // añado libro
             $stmt->execute();
@@ -398,7 +399,7 @@ class libroModel extends Model
         try {
 
             $sql = "
-                DELETE FROM alumnos
+                DELETE FROM libros
                 WHERE id = :id
                 LIMIT 1
             ";
@@ -423,7 +424,7 @@ class libroModel extends Model
     /*
         método: filter
 
-        descripción: filtra los alumnos por una expresión
+        descripción: filtra los libros por una expresión
 
         @param: expresión a buscar
     */
@@ -431,43 +432,47 @@ class libroModel extends Model
     {
         try {
             $sql = "
-
             SELECT 
-                alumnos.id,
-                concat_ws(', ', alumnos.apellidos, alumnos.titulo) alumno,
-                alumnos.email,
-                alumnos.telefono,
-                alumnos.nacionalidad,
-                alumnos.dni,
-                timestampdiff(YEAR,  alumnos.fechaNac, NOW() ) edad,
-                cursos.tituloCorto curso
-            FROM
-                alumnos
+                libros.id,
+                libros.titulo,
+                libros.precio,
+                libros.stock,
+                libros.fecha_edicion,
+                libros.isbn,
+                autores.nombre autor,
+                editoriales.nombre editorial,
+                GROUP_CONCAT(generos.tema) generos
+            FROM 
+                libros 
             INNER JOIN
-                cursos
+                autores
             ON 
-                alumnos.id_curso = cursos.id
+                libros.autor_id = autores.id
+            INNER JOIN
+                editoriales
+            ON
+                libros.editorial_id = editoriales.id
+            LEFT JOIN
+                generos
+            ON
+                FIND_IN_SET(generos.id, libros.generos_id)
             WHERE
-
-                CONCAT_WS(  ', ', 
-                            alumnos.id,
-                            alumnos.titulo,
-                            alumnos.apellidos,
-                            alumnos.email,
-                            alumnos.telefono,
-                            alumnos.poblacion,
-                            alumnos.nacionalidad,
-                            alumnos.dni,
-                            TIMESTAMPDIFF(YEAR, alumnos.fechaNac, now()),
-                            alumnos.fechaNac,
-                            cursos.tituloCorto,
-                            cursos.titulo) 
-                like :expresion
-
-            ORDER BY 
-                alumnos.id
-            
+                CONCAT_WS(' ', libros.titulo, 
+                autores.nombre, 
+                editoriales.nombre, 
+                generos.tema,
+                libros.titulo,
+                libros.precio,
+                libros.stock,
+                libros.fecha_edicion,
+                libros.isbn
+                ) LIKE :expresion
+            GROUP BY
+                libros.id
+            ORDER BY
+                libros.id
             ";
+
 
             # Conectar con la base de datos
             $conexion = $this->db->connect();
@@ -504,20 +509,31 @@ class libroModel extends Model
             # comando sql
             $sql = "
             SELECT 
-                alumnos.id,
-                concat_ws(', ', alumnos.apellidos, alumnos.titulo) alumno,
-                alumnos.email,
-                alumnos.telefono,
-                alumnos.nacionalidad,
-                alumnos.dni,
-                timestampdiff(YEAR,  alumnos.fechaNac, NOW() ) edad,
-                cursos.tituloCorto curso
-            FROM
-                alumnos
+                libros.id,
+                libros.titulo,
+                libros.precio,
+                libros.stock,
+                libros.fecha_edicion,
+                libros.isbn,
+                autores.nombre autor,
+                editoriales.nombre editorial,
+                GROUP_CONCAT(generos.tema) generos
+            FROM 
+                libros 
             INNER JOIN
-                cursos
+                autores
             ON 
-                alumnos.id_curso = cursos.id
+                libros.autor_id = autores.id
+            INNER JOIN
+                editoriales
+            ON
+                libros.editorial_id = editoriales.id
+            LEFT JOIN
+                generos
+            ON
+                FIND_IN_SET(generos.id, libros.generos_id)
+            GROUP BY
+                libros.id
             ORDER BY 
                 :criterio
             ";

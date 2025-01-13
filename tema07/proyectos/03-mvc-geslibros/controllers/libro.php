@@ -89,7 +89,7 @@ class Libro extends Controller
             $isbn,
             $id_autor,
             $id_editorial,
-            $id_generos
+            implode(',', $id_generos)
         );
 
         // Añadimos libro a la tabla
@@ -181,7 +181,7 @@ class Libro extends Controller
             $isbn,
             $id_autor,
             $id_editorial,
-            $id_generos
+            implode(',', $id_generos)
 
         );
 
@@ -214,7 +214,7 @@ class Libro extends Controller
         $this->model->delete($id);
 
         # Cargo el controlador principal de alumno
-        header('location:' . URL . 'alumno');
+        header('location:' . URL . 'libro');
     }
 
     /*
@@ -266,15 +266,15 @@ class Libro extends Controller
         $expresion = $_GET['expresion'];
 
         # Cargo el título
-        $this->view->title = "Filtrar por: {$expresion} - Gestión de Alumnos";
+        $this->view->title = "Filtrar por: {$expresion} - Gestión de Libros";
 
 
 
         # Obtengo los alumnos que coinciden con la expresión de búsqueda
-        $this->view->alumnos = $this->model->filter($expresion);
+        $this->view->libros = $this->model->filter($expresion);
 
         # Cargo la vista
-        $this->view->render('alumno/main/index');
+        $this->view->render('libro/main/index');
     }
 
     /*
@@ -292,14 +292,15 @@ class Libro extends Controller
 
         # Criterios de ordenación
         $criterios = [
-            1 => 'ID',
-            2 => 'Alumno',
-            3 => 'Email',
-            4 => 'Teléfono',
-            5 => 'Nacionalidad',
-            6 => 'DNI',
-            7 => 'Curso',
-            8 => 'Edad'
+            1 => 'Id',
+            2 => 'Titulo',
+            3 => 'Precio',
+            4 => 'Stock',
+            5 => 'Fecha de edicion',
+            6 => 'ISBN',
+            7 => 'Autor',
+            8 => 'Editorial',
+            9 => 'Generos'
         ];
 
         # Obtengo el id del campo por el que se ordenarán los alumnos
@@ -310,9 +311,9 @@ class Libro extends Controller
         $this->view->title = "Ordenar por {$criterios[$id]} - Gestión de Alumnos";
 
         # Obtengo los alumnos ordenados por el campo id
-        $this->view->alumnos = $this->model->order($id);
+        $this->view->libros = $this->model->order($id);
 
         # Cargo la vista
-        $this->view->render('alumno/main/index');
+        $this->view->render('libro/main/index');
     }
 }

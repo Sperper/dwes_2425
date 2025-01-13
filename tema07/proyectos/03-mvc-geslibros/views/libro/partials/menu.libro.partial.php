@@ -17,20 +17,20 @@
                         Ordenar
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/1">Id</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/2">Alumno</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/3">Email</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/4">Teléfono</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/5">Nacionalidad</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/6">DNI</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/7">Curso</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>alumno/ordenar/8">Edad</a></li>
-                        
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/1">Id</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/2">Titulo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/3">Precio</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/4">Stock</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/5">Fecha de Edicion</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/6">ISBN</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/7">Autor</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/8">Editorial</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/9">Géneros</a></li>
                     </ul>
                 </li>
 
             </ul>
-            <form class="d-flex" role="search" action="alumno/filtrar" method="GET">
+            <form class="d-flex" role="search" action="libro/filtrar" method="GET">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="expresion" required>
                 <button class="btn btn-outline-primary" type="submit">Buscar</button>
             </form>

@@ -53,7 +53,7 @@ class Alumno extends Controller
         session_start();
 
         // Creo un token CSRF
-        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));    
 
         // Crear un objeto vacío de la clase alumno
         $this->view->alumno = new classAlumno();

@@ -144,13 +144,13 @@
                             <!-- muestro el array generos -->
                             <?php foreach ($this->generos as $indice => $data): ?>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="generos[]" value="<?= $indice ?>">
-                                    <label class="form-check-label" for="">
+                                    <input class="form-check-input" type="checkbox" name="generos[]" value="<?= $indice ?>"
+                                    <?php if (in_array($indice, explode(',', $this->libro->generos_id))) echo 'checked' ?>>
+                                    <label class="form-check-label" for="" >
                                         <?= $data ?>
                                     </label>
                                 </div>
                             <?php endforeach; ?>
-
                         </div>
                     </div>
 

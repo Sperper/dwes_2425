@@ -65,9 +65,9 @@
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                             <a href="<?= URL ?>alumno/eliminar/<?= $alumno->id ?>" title="Eliminar"
                                                 class="btn btn-danger"
-                                                onclick="return confirm('Confimar elimación del alumno')"><i
+                                                onclick="return confirm('Confimar elimación del alumno')" aria-label="Eliminar alumno"><i
                                                     class="bi bi-trash-fill"></i></a>
-                                            <a href="<?= URL ?>alumno/editar/<?= $alumno->id ?>" title="Editar"
+                                            <a href="<?= URL ?>alumno/editar/<?= $alumno->id ?>/<?= $_SESSION['csrf_token'] ?>" title="Editar"
                                                 class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
                                             <a href="<?= URL ?>alumno/mostrar/<?= $alumno->id ?>" title="Mostrar"
                                                 class="btn btn-warning"><i class="bi bi-eye-fill"></i></a>

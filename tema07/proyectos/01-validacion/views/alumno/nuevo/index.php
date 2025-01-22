@@ -60,7 +60,6 @@
                             <?= $this->error['apellidos'] ??= null ?>
                         </span>   
                     </div>
-                    
                     <!-- Fecha Nacimiento -->
                     <div class="mb-3">
                         <label for="fechaNac" class="form-label">Fecha Nacimiento</label>

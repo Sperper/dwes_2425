@@ -237,13 +237,13 @@ class Libro extends Controller
         $this->view->title = "Mostrar - Gestión de Alumnos";
 
         # Obtengo los detalles del alumno mediante el método read del modelo
-        $this->view->alumno = $this->model->read($id);
+        $this->view->libro = $this->model->read($id);
 
         # obtener los cursos
         $this->view->cursos = $this->model->get_cursos();
 
         # Cargo la vista
-        $this->view->render('alumno/mostrar/index');
+        $this->view->render('libro/mostrar/index');
     }
 
     /*

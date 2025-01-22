@@ -262,10 +262,44 @@ class Libro extends Controller
         // -- edit es el nombre del método
         // -- $param es un array porque puedo pasar varios parámetros a un método
 
-        $id = $param[0];
+        // inicio o continuo la sesion
+        session_start();
 
         # asigno id a una propiedad de la vista
-        $this->view->id = $id;
+        $this->view->id = htmlspecialchars($param[0]);
+
+        # obtengo el token CSRF
+        $this->view->csrf_token = $param[1];
+
+        # Validacion CSRF
+        if (!hash_equals($_SESSION['csrf_token'], $this->view->csrf_token)) {
+            require_once 'controllers/error.php';
+            $controller = new Errores('Peticion no válida');
+            exit();
+        }
+
+        # obtengo el objeto de la clase libro con el id asociado
+        $this->view->libro = $this->model->read($this->view->id);
+
+        # Compruebo si hay errores de validación
+        if(isset($_SESSION['error'])) {
+
+            // Creo la propiedad error de la vista
+            $this->view->error = $_SESSION['error'];
+
+            // Creo la propiedad libro de la vista
+            $this->view->libro = $_SESSION['libro'];
+
+            // Creo la propiedad mensaje de error
+            $this->view->mensaje = 'Error en el formulario';
+
+            // Elimino la variable de sesión libro
+            unset($_SESSION['libro']);
+
+            // Elimino la variable de sesión error
+            unset($_SESSION['errores']);
+
+        }
 
         # title
         $this->view->title = "Formulario Editar - Gestión de Libros";
@@ -301,23 +335,36 @@ class Libro extends Controller
     public function update($param = [])
     {
 
-        # Cargo id del alumno
-        $id = $param[0];
+        # inicio o continuo la sesion
+        session_start();
+
+        # obtengo el id del alumno que voy a editar
+        $id = htmlspecialchars($param[0]);
+
+        # obtengo el token CSRF
+        $csrf_token = $param[1];
+
+        # Validacion CSRF
+        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+            require_once 'controllers/error.php';
+            $controller = new Errores('Peticion no válida');
+            exit();
+        }
 
         // Recogemos los detalles del formulario
-        $titulo = $_POST['titulo'];
-        $precio = $_POST['precio'];
-        $stock = $_POST['stock'];
-        $fecha_edicion = $_POST['fecha_edicion'];
-        $isbn = $_POST['isbn'];
-        $id_editorial = $_POST['id_editorial'];
-        $id_autor = $_POST['id_autor'];
-        $id_generos = $_POST['generos'];
+        $titulo = filter_var($_POST['titulo'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $precio = filter_var($_POST['precio'], FILTER_SANITIZE_NUMBER_FLOAT);
+        $stock = filter_var($_POST['stock'], FILTER_SANITIZE_NUMBER_INT);
+        $fecha_edicion = filter_var($_POST['fecha_edicion'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $isbn = filter_var($_POST['isbn'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $id_editorial = filter_var($_POST['id_editorial'], FILTER_SANITIZE_NUMBER_INT);
+        $id_autor = filter_var($_POST['id_autor'], FILTER_SANITIZE_NUMBER_INT);
+        $id_generos = filter_var($_POST['generos'], FILTER_SANITIZE_NUMBER_INT, FILTER_REQUIRE_ARRAY);
 
         # Con los detalles formulario creo objeto alumno
-        $libro = new classLibro(
+        $libro_form = new classLibro(
 
-            null,
+            $id,
             $titulo,
             $precio,
             $stock,
@@ -330,11 +377,154 @@ class Libro extends Controller
         );
 
         # Actualizo base  de datos
-        // Necesito crear el método update en el modelo
-        $this->model->update($libro, $id);
+        # Obtengo los detalles del libro de la base de datos
+        $libro = $this->model->read($libro_form);
 
-        # Cargo el controlador principal de alumno
-        header('location:' . URL . 'libro');
+        # Validacion de los datos
+        # Validacion en caso de que haya sufrido modificaciones en el campo correspondiente
+        $error = [];
+
+        # Control de cambios en los campos
+        $cambios = false;
+
+        # Validacion del título
+        # Reglas: obligatorio
+        if(strcmp($titulo, $libro->titulo != 0)) {
+            $cambios = true;
+            if (empty($titulo)) {
+                $error['titulo'] = 'El título es obligatorio';
+            }
+        }
+
+        # Validacion del precio
+        # Reglas: obligatorio, numérico
+        if(strcmp($precio, $libro->precio != 0)) {
+            $cambios = true;
+            if (empty($precio)) {
+                $error['precio'] = 'El precio es obligatorio';
+            } elseif (!is_numeric($precio)) {
+                $error['precio'] = 'El precio debe ser numérico';
+            }
+        }
+
+        # Validacion del stock
+        # Reglas: obligatorio, numérico
+        if(strcmp($stock, $libro->stock != 0)) {
+            $cambios = true;
+            if (empty($stock)) {
+                $error['stock'] = 'El stock es obligatorio';
+            } elseif (!is_numeric($stock)) {
+                $error['stock'] = 'El stock debe ser numérico';
+            }
+        }
+
+        # Validacion de la fecha de edición
+        # Reglas: obligatorio
+        if(strcmp($fecha_edicion, $libro->fecha_edicion != 0)) {
+            $cambios = true;
+            if (empty($fecha_edicion)) {
+                $error['fecha_edicion'] = 'La fecha de edición es obligatoria';
+            }
+        }
+
+        # Validacion del ISBN
+        # Reglas: obligatorio, formato ISBN y clave secundaria
+        if(strcmp($isbn, $libro->isbn != 0)) {
+            $cambios = true;
+            // Expresión regular para ISBN
+            // Formato: 3-598-21508-8
+            $options = [
+                'options' => [
+                    'regexp' => '/^\d{1,5}-\d{1,7}-\d{1,6}-\d{1,1}$/'
+                ]
+            ];
+
+            if (empty($isbn)) {
+                $error['isbn'] = 'El ISBN es obligatorio';
+            } elseif (!filter_var($isbn, FILTER_VALIDATE_REGEXP, $options)) {
+                $error['isbn'] = 'El ISBN no es válido';
+            }
+        }
+
+        # Validacion del id_autor
+        # Reglas: obligatorio, entero, clave ajena
+        if ($id_autor =! $libro->autor_id) {
+            $cambios = true;
+            if (empty($id_autor)) {
+                $error['id_curso'] = 'El curso es obligatorio';
+            } else if (!filter_var($id_autor, FILTER_VALIDATE_INT)) {
+                $error['id_curso'] = 'El formato del curso no es correcto';
+            } else if (!$this->model->validateForeignKeyCurso($id_autor)) {
+                $error['id_curso'] = 'El curso no existe';
+            }
+        }
+
+        # Validacion del id_editorial
+        # Reglas: obligatorio, entero, clave ajena
+        if ($id_editorial =! $libro->editorial_id) {
+            $cambios = true;
+            if (empty($id_editorial)) {
+                $error['id_editorial'] = 'La editorial es obligatoria';
+            } else if (!filter_var($id_editorial, FILTER_VALIDATE_INT)) {
+                $error['id_editorial'] = 'El formato de la editorial no es correcto';
+            } else if (!$this->model->validateForeignKeyEditorial($id_editorial)) {
+                $error['id_editorial'] = 'La editorial no existe';
+            }
+        }
+
+        # Validacion del id_generos
+        # Reglas: obligatorio, entero, clave ajena, array
+        if ($id_generos =! $libro->generos) {
+            $cambios = true;
+            if (empty($id_generos)) {
+                $error['id_generos'] = 'El género es obligatorio';
+            } else if (!is_array($id_generos)) {
+                $error['id_generos'] = 'El género debe ser un número entero';
+            } else {
+                foreach ($id_generos as $genero) {
+                    if (!is_numeric($genero)) {
+                        $error['id_generos'] = 'El género debe ser un número entero';
+                    }
+                }
+            }
+        }
+
+        # Si hay errores 
+        if (!empty($error)) {
+
+            # Creo la variable de sesión error
+            $_SESSION['error'] = $error;
+
+            # Creo la variable de sesión libro
+            $_SESSION['libro'] = $libro_form;
+
+            # Redirecciono al formulario de editar
+            header('location:' . URL . 'libro/editar/' . $id . '/' . $csrf_token);
+
+            # Salgo del script
+            exit;
+        }
+
+        # Compruebo si hay cambios
+        if ($cambios) {
+            # Genero un mensaje de éxito
+            $_SESSION['mensaje'] = 'No se han realizado cambios';
+
+            # Redirecciono al main de libro
+            header('location:' . URL . 'libro');
+            exit();
+        }
+
+        # Necesito crear el método update en el modelo
+        $this->model->update($libro_form, $id);
+
+        # Genero mensaje de exito
+        $_SESSION['mensaje'] = 'Libro actualizado con éxito';
+
+        # Cargo el controlador principal de libro
+        header('location' . URL . 'libro');
+        exit();
+
     }
 
     /*

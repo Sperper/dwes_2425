@@ -21,6 +21,22 @@ class Alumno extends Controller
         // inicio o continuo la sesión
         session_start();
 
+        // Comprobar si hay un usuario logueado
+        if (!isset($_SESSION['usuario'])) {
+            // Genero mensaje de error
+            $_SESSION['mensaje_error'] = 'Acceso denegado';
+
+            // redirecciono a login
+            header('location:' . URL . 'auth/login');
+            exit();
+        } else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['main'])) {
+
+            $_SESSION['mensaje'] = 'Acceso denegado. No tiene permisos suficientes';
+            header('location:' . URL . 'auth/login');
+            exit();
+            
+        }
+
         // Creo un token CSRF
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 

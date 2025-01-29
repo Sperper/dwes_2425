@@ -1,4 +1,4 @@
-    <!doctype html>
+<!doctype html>
 <html lang="es">
 
 <head>
@@ -20,19 +20,19 @@
         <!-- Estilo card de bootstrap -->
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title"><?= htmlspecialchars( $this->title ) ?></h5>
+                <!-- Protección ataques XSS -->
+                <h5 class="card-title"><?= htmlspecialchars($this->title) ?></h5>
             </div>
             <div class="card-body">
                 <!-- Formulario de alumnos  -->
-                <form action="<?= URL ?>libro/update/<?= $this->id ?>/<?= $this->csrf_token ?>" method="POST">
-
-                    <!-- proteccion CSRF -->
-                    <input type="hidden" name="csrf_token"
-                        value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
+                <form action="<?= URL ?>libro/update/<?= $this->id ?>/<?= $this->csrf_token?>" method="POST">
 
                     <!-- id oculto -->
-                    <!-- Tengo que pasar el id oculto para que el controlador pueda validar doblemente el id -->
-                    <input type="number" class="form-control" name="id" value="<?= htmlspecialchars($this->libro->id) ?>" hidden>
+                    <input type="number" class="form-control" name="id" value="<?= $this->libro->id ?>" hidden>
+
+                    <!-- protección CSRF -->
+                    <input type="hidden" name="csrf_token"
+                        value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
 
                     <!-- titulo -->
                     <div class="mb-3">
@@ -48,7 +48,7 @@
                         </span>
                     </div>
 
-                    <!-- precio -->
+                    <!-- Precio -->
                     <div class="mb-3">
                         <label for="precio" class="form-label">Precio</label>
                         <input type="number" class="form-control
@@ -61,7 +61,7 @@
                             <?= $this->error['precio'] ??= null ?>
                         </span>                         
                     </div>
-                    
+
                     <!-- Stock -->
                     <div class="mb-3">
                         <label for="Precio" class="form-label">Stock</label>
@@ -138,6 +138,10 @@
                                 </option>
                             <?php endforeach; ?>
                         </select>
+                        <!-- mostrar posible error -->
+                        <span class="form-text text-danger" role="alert">
+                            <?= $this->error['id_editorial'] ??= null ?>
+                        </span>
                     </div>
 
                     <!-- Checkbox Dinámico Generos -->
@@ -148,20 +152,20 @@
                             <?php foreach ($this->generos as $indice => $data): ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="generos[]" value="<?= $indice ?>"
-                                    <?php if (in_array($indice, explode(',', $this->libro->generos_id))) echo 'checked' ?>>
-                                    <label class="form-check-label" for="" >
+                                        <?php if (in_array($indice, explode(',', $this->libro->generos_id))) echo 'checked' ?>>
+                                    <label class="form-check-label" for="">
                                         <?= $data ?>
                                     </label>
                                 </div>
                             <?php endforeach; ?>
-
                         </div>
                     </div>
 
             </div>
             <div class="card-footer">
                 <!-- botones de acción -->
-                <a class="btn btn-secondary" href="<?= URL ?>alumno" role="button">Cancelar</a>
+                <a class="btn btn-secondary" href="<?= URL ?>alumno" role="button"
+                    onclick="return confirm('¿Estás seguro de que deseas cancelar? Se perderán los datos ingresados.')">Cancelar</a>
                 <button type="reset" class="btn btn-danger">Borrar</button>
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </div>

@@ -568,4 +568,51 @@ class libroModel extends Model
             exit();
         }
     }
+
+    /*
+        método: validateIdLibro
+
+        descripción: valida si un id de libro existe en la base de datos
+
+        @param: 
+            - id del libro
+    */
+
+
+    public function validateIdLibro(int $id) {
+
+        try {
+
+            $sql = "
+                SELECT 
+                    id
+                FROM 
+                    libros
+                WHERE
+                    id = :id
+            ";
+
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if ($stmt->rowCount() == 1) {
+                return TRUE;
+            } 
+
+            return FALSE;
+            
+
+        } catch (PDOException $e) {
+
+            // error base de datos
+            require_once 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+            exit();
+        }
+    }
+
 }

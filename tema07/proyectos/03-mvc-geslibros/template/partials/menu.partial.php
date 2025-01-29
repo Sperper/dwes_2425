@@ -22,9 +22,13 @@
         </li>
       </ul>
       <div class="d-flex">
-       
+        <div class="collapse navbar-collapse" id="exCollapsingNavbar">
+          <ul class="nav navbar-nav flex-row justify-content-between ml-auto">
+            <li class="nav-item"><a href="<?= URL ?>auth/login" class="nav-link active">Login</a></li>
+            <li class="nav-item"><a href="<?= URL ?>auth/register" class="nav-link active">Register</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
 </nav>
-

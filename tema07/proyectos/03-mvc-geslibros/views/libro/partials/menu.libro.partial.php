@@ -17,15 +17,15 @@
                         Ordenar
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/1">Id</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/2">Titulo</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/3">Precio</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/4">Stock</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/5">Fecha de Edicion</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/6">ISBN</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/7">Autor</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/8">Editorial</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/9">Géneros</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/1/<?= $_SESSION['csrf_token'] ?>">Id</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/2/<?= $_SESSION['csrf_token'] ?>">Titulo</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/3/<?= $_SESSION['csrf_token'] ?>">Precio</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/4/<?= $_SESSION['csrf_token'] ?>">Stock</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/5/<?= $_SESSION['csrf_token'] ?>">Fecha de Edicion</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/6/<?= $_SESSION['csrf_token'] ?>">ISBN</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/7/<?= $_SESSION['csrf_token'] ?>">Autor</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/8/<?= $_SESSION['csrf_token'] ?>">Editorial</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>libro/ordenar/9/<?= $_SESSION['csrf_token'] ?>">Géneros</a></li>
                     </ul>
                 </li>
 

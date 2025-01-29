@@ -1,5 +1,5 @@
 <?php
-
+ 
 /*
     alumnoModel.php
 
@@ -10,7 +10,7 @@
         - get()
 */
 
-class libroModel extends Model
+class libroModel extends Model 
 {
 
     /*

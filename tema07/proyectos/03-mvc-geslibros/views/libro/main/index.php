@@ -69,7 +69,7 @@
                                                 class="btn btn-danger"
                                                 onclick="return confirm('Confimar elimación del libro')"><i
                                                     class="bi bi-trash-fill"></i></a>
-                                            <a href="<?= URL ?>libro/editar/<?= $libro->id ?>" title="Editar"
+                                            <a href="<?= URL ?>libro/editar/<?= $libro->id ?>/<?= $_SESSION['csrf_token'] ?>" title="Editar"
                                                 class="btn btn-primary"><i class="bi bi-pencil-square"></i></a>
                                             <a href="<?= URL ?>libro/mostrar/<?= $libro->id ?>" title="Mostrar"
                                                 class="btn btn-warning"><i class="bi bi-eye-fill"></i></a>

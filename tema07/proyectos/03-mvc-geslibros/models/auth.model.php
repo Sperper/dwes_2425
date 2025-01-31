@@ -14,9 +14,10 @@ class authModel extends Model
 {
 
     /*
-        método: validateName()
+        método: validateUniqueName()
 
-        Valida el name de usuario, devuelve verdadero si no existe el nombre
+        Valida el name de usuario, devuelve verdadero si el  nombre no existe en la base de datos
+
 
         @param: name del usuario
     */
@@ -26,7 +27,8 @@ class authModel extends Model
         try {
 
             // sentencia sql
-            $sql = "SELECT * FROM Users WHERE name = :name";
+            $sql = "SELECT * FROM Users WHERE name = :name"; 
+
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -34,15 +36,15 @@ class authModel extends Model
             // ejecuto prepare
             $stmt = $conexion->prepare($sql);
 
-            // Vinculamos parametros
-            $stmt->bindParam(":name", $name, PDO::PARAM_STR, 50);
+            // vinculamos parámetros
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR, 50);
 
             // ejecutamos
             $stmt->execute();
 
-            if($stmt->rowCount() > 0) {
+            if ($stmt->rowCount() > 0) {
                 return FALSE;
-            }
+            } 
 
             return TRUE;
 
@@ -59,9 +61,11 @@ class authModel extends Model
     /*
         método: validateUniqueEmail()
 
-        Valida el email de usuario, devuelve verdadero si no existe el email
-
+        descripción: comprueba si un email ya existe en la base de datos, 
+        devuelve verdadero si es un valor único
+        
         @param: email del usuario
+
     */
     public function validateUniqueEmail($email)
     {
@@ -69,7 +73,7 @@ class authModel extends Model
         try {
 
             // sentencia sql
-            $sql = "SELECT * FROM Users WHERE email = :email";
+            $sql = "SELECT * FROM Users WHERE email = :email"; 
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -77,15 +81,15 @@ class authModel extends Model
             // ejecuto prepare
             $stmt = $conexion->prepare($sql);
 
-            // Vinculamos parametros
-            $stmt->bindParam(":email", $email, PDO::PARAM_STR, 50);
+            // vinculamos parámetros
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR, 50);
 
             // ejecutamos
             $stmt->execute();
 
-            if($stmt->rowCount() > 0) {
+            if ($stmt->rowCount() > 0) {
                 return FALSE;
-            }
+            } 
 
             return TRUE;
 
@@ -100,17 +104,24 @@ class authModel extends Model
     }
 
     /*
-        metodo: create()
+        método: create()
 
-        descripcion: crea un nuevo usuario en la base de datos
+        descripción: crea un nuevo usuario en la base de datos
+        
+        @param: name del usuario, email del usuario, password del usuario
 
-        @param: name del usuario, email, del usuario, password del usuario
     */
     public function create($name, $email, $password)
     {
+
         try {
+
+            // encriptamos la contraseña
+            $password = password_hash($password, PASSWORD_DEFAULT);
+
             // sentencia sql
-            $sql = "INSERT INTO Users (name, email, password) VALUES (:name, :email, :password)";
+            $sql = "INSERT INTO Users (name, email, password) 
+            VALUES (:name, :email, :password)"; 
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -118,16 +129,17 @@ class authModel extends Model
             // ejecuto prepare
             $stmt = $conexion->prepare($sql);
 
-            // Vinculamos parametros
-            $stmt->bindParam(":name", $name, PDO::PARAM_STR, 50);
-            $stmt->bindParam(":email", $email, PDO::PARAM_STR, 50);
-            $stmt->bindParam(":password", password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
+            // vinculamos parámetros
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR, 50);
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR, 50);
+            $stmt->bindParam(':password', $password, PDO::PARAM_STR, 255);
 
             // ejecutamos
             $stmt->execute();
 
             // Devuelvo id asignado al nuevo usuario
-            return $conexion->lastInsertId();;
+            return $conexion->lastInsertId();
+            
 
         } catch (PDOException $e) {
 
@@ -136,70 +148,25 @@ class authModel extends Model
             $stmt = null;
             $conexion = null;
             $this->db = null;
-            return FALSE;
-        }
-    }
-
-
-    /*
-        método: validateIdAlumno
-
-        descripción: valida el id de un alumno. Que exista en la base de datos
-
-        @param: 
-            - id del alumno
-
-    */
-
-    public function validateIdAlumno(int $id) {
-
-        try {
-
-            $sql = "
-                SELECT 
-                    id
-                FROM 
-                    alumnos
-                WHERE
-                    id = :id
-            ";
-
-            $conexion = $this->db->connect();
-            $stmt = $conexion->prepare($sql);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            $stmt->execute();
-
-            if ($stmt->rowCount() == 1) {
-                return TRUE;
-            } 
-
-            return FALSE;
-            
-
-        } catch (PDOException $e) {
-
-            // error base de datos
-            require_once 'template/partials/errorDB.partial.php';
-            $stmt = null;
-            $conexion = null;
-            $this->db = null;
-            exit();
         }
     }
 
     /*
         método: assignRole(int $id, int $role)
 
-        descripcion: asgina un ron a un suario
+        descripción: asigna un rol a un usuario
+        
+        @param: id del usuairo, role del usuario
 
-        @param: id del usuario, rol del usuario
     */
-
-    public function assignRole(int $id, int $role)
+    public function assignRole($id, $role)
     {
+
         try {
+
             // sentencia sql
-            $sql = "INSERT INTO roles_users (user_id, role_id) VALUES (:id, :role)";
+            $sql = "INSERT INTO roles_users (user_id, role_id) 
+            VALUES (:user_id, :role_id)"; 
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -207,14 +174,12 @@ class authModel extends Model
             // ejecuto prepare
             $stmt = $conexion->prepare($sql);
 
-            // Vinculamos parametros
-            $stmt->bindParam(":id", $id, PDO::PARAM_INT);
-            $stmt->bindParam(":role", $role, PDO::PARAM_INT);
+            // vinculamos parámetros
+            $stmt->bindParam(':user_id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':role_id', $role, PDO::PARAM_INT);
 
             // ejecutamos
             $stmt->execute();
-
-            return TRUE;
 
         } catch (PDOException $e) {
 
@@ -223,22 +188,24 @@ class authModel extends Model
             $stmt = null;
             $conexion = null;
             $this->db = null;
-            return FALSE;
         }
     }
 
     /*
-        método: getUserByEmail
+        método: getUserEmail()
 
-        descripción: obtiene un usuario por su email
-
+        descripción: obtiene un usuario por email
+        
         @param: email del usuario
+
     */
-    public function getUserByEmail($email)
+    public function getUserEmail($email)
     {
+
         try {
+
             // sentencia sql
-            $sql = "SELECT * FROM Users WHERE email = :email LIMIT 1";
+            $sql = "SELECT * FROM Users WHERE email = :email LIMIT 1"; 
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -249,13 +216,13 @@ class authModel extends Model
             // Tipo de fetch
             $stmt->setFetchMode(PDO::FETCH_OBJ);
 
-            // Vinculamos parametros
-            $stmt->bindParam(":email", $email, PDO::PARAM_STR, 50);
+            // vinculamos parámetros
+            $stmt->bindParam(':email', $email, PDO::PARAM_STR, 50);
 
             // ejecutamos
             $stmt->execute();
 
-            // Devuelvo el usuario encontrado
+            // Devuelvo objeto usuario
             return $stmt->fetch();
 
         } catch (PDOException $e) {
@@ -265,23 +232,24 @@ class authModel extends Model
             $stmt = null;
             $conexion = null;
             $this->db = null;
-            return FALSE;
         }
     }
 
     /*
-        metodo: getPerfilUser
+        método: getIdPerfilUser()
 
-        descripcion: obtiene el id del perfil de un usuario
-
+        descripción: obtiene el id del perfil de un usuario
+        
         @param: id del usuario
-    */
 
-    public function getPerfilUser(int $id)
+    */
+    public function getIdPerfilUser(int $id)
     {
+
         try {
+
             // sentencia sql
-            $sql = "SELECT perfil_id FROM Users WHERE user_id = :user_id LIMIT 1";
+            $sql = "SELECT role_id FROM roles_users WHERE user_id = :user_id LIMIT 1"; 
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -289,14 +257,17 @@ class authModel extends Model
             // ejecuto prepare
             $stmt = $conexion->prepare($sql);
 
-            // Vinculamos parametros
-            $stmt->bindParam(":user_id", $id, PDO::PARAM_INT);
+            // Tipo de fetch
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
+
+            // vinculamos parámetros
+            $stmt->bindParam(':user_id', $id, PDO::PARAM_INT);
 
             // ejecutamos
             $stmt->execute();
 
-            // Devuelvo el perfil_id encontrado
-            return $stmt->fetchColumn();
+            // Devuelvo objeto usuario
+            return $stmt->fetch();
 
         } catch (PDOException $e) {
 
@@ -305,50 +276,53 @@ class authModel extends Model
             $stmt = null;
             $conexion = null;
             $this->db = null;
-            return FALSE;
         }
     }
 
-    
+    /*
+        método: getNamePerfil($role_id)
+
+        descripción: obtiene el nombre del perfil de un usuario
         
+        @param: id del perfil
 
-        /*
-            método: getNombrePerfil
+    */
+    public function getNamePerfil($role_id)
+    {
 
-            descripción: obtiene el nombre del perfil de un usuario
+        try {
 
-            @param: id del perfil
-        */
-        public function getNombrePerfil(int $role_id)
-        {
-            try {
-                // sentencia sql
-                $sql = "SELECT name FROM roles WHERE id = :role_id LIMIT 1";
+            // sentencia sql
+            $sql = "SELECT name FROM roles WHERE id = :role_id LIMIT 1"; 
 
-                // conectamos con la base de datos
-                $conexion = $this->db->connect();
+            // conectamos con la base de datos
+            $conexion = $this->db->connect();
 
-                // ejecuto prepare
-                $stmt = $conexion->prepare($sql);
+            // ejecuto prepare
+            $stmt = $conexion->prepare($sql);
 
-                // Vinculamos parametros
-                $stmt->bindParam(":role_id", $role_id, PDO::PARAM_INT);
+            // Tipo de fetch
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
 
-                // ejecutamos
-                $stmt->execute();
+            // vinculamos parámetros
+            $stmt->bindParam(':role_id', $role_id, PDO::PARAM_INT);
 
-                // Devuelvo el nombre del perfil encontrado
-                return $stmt->fetchColumn();
+            // ejecutamos
+            $stmt->execute();
 
-            } catch (PDOException $e) {
+            // Devuelvo objeto usuario
+            return $stmt->fetch()->name;
 
-                // error base de datos
-                require 'template/partials/errorDB.partial.php';
-                $stmt = null;
-                $conexion = null;
-                $this->db = null;
-                return FALSE;
-            }
+        } catch (PDOException $e) {
+
+            // error base de datos
+            require 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
         }
-    
+    }
+
+
+
 }

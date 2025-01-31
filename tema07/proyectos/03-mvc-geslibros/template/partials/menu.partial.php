@@ -14,12 +14,12 @@
         <li class="nav-item">
           <a class="nav-link" href="<?= URL ?>libro">Libros</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="<?= URL ?>asignatura">Asignaturas</a>
         </li>
         <li class="nav-item">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Link</a>
-        </li>
+        </li> -->
       </ul>
       <div class="d-flex">
         <div class="collapse navbar-collapse" id="exCollapsingNavbar">

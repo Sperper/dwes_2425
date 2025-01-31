@@ -7,7 +7,6 @@ require_once 'libs/view.php';
 
 require_once 'libs/app.php';
 require_once 'config/config.php';
-require_once 'config/privilegios.php';
 require_once 'class/alumno.class.php';
 $app = new App();
 

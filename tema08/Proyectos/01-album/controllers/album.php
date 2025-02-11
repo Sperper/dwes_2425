@@ -76,15 +76,18 @@ class Album extends Controller
         // Creo la propiedad alumnos para usar en la vista
         $this->view->albumes = $this->model->get();
 
+        // Creo la propiedad categorias para usar en la vista
+        $this->view->categorias = $this->model->get_categorias();
+
         $this->view->render('album/main/index');
     }
 
     /*
         Método nuevo()
 
-        Muestra el formulario que permite añadir nuevo alumno
+        Muestra el formulario que permite añadir nuevo album
 
-        url asociada: /alumno/nuevo
+        url asociada: /album/nuevo
     */
     public function nuevo()
     {
@@ -134,6 +137,9 @@ class Album extends Controller
         // Creo la propiead título
         $this->view->title = "Añadir - Gestión de Albumes";
 
+        // Creo la propiedad categorias para usar en la vista
+        $this->view->categorias = $this->model->get_categorias();
+
         // Cargo la vista asociada a este método
         $this->view->render('album/nuevo/index');
     }
@@ -148,7 +154,6 @@ class Album extends Controller
     */
     public function create()
     {
-
         // inicio o continuo la sesión
         session_start();
 
@@ -160,166 +165,140 @@ class Album extends Controller
             exit();
         }
         // Comprobar si el usuario tiene permisos
-        else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['nuevo'])) {
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['nuevo'])) {
             // Genero mensaje error
             $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
-            header('location:' . URL . 'alumno');
+            header('location:' . URL . 'album');
             exit();
         }
 
         // Validación CSRF
         if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-            // require_once 'controllers/error.php';
-            // $controller = new Errores('Petición no válida');
-            // exit();
             header('location:' . URL . 'errores');
             exit();
         }
 
         // Recogemos los detalles del formulario saneados
         // Prevenir ataques XSS
-        $nombre = filter_var($_POST['nombre'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $apellidos = filter_var($_POST['apellidos'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $fechaNac = filter_var($_POST['fechaNac'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
-        $telefono = filter_var($_POST['telefono'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $nacionalidad = filter_var($_POST['nacionalidad'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $id_curso = filter_var($_POST['id_curso'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+        $titulo = filter_var($_POST['titulo'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $descripcion = filter_var($_POST['descripcion'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $autor = filter_var($_POST['autor'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $fecha = filter_var($_POST['fecha'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $lugar = filter_var($_POST['lugar'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $categoria_id = filter_var($_POST['categoria_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+        $carpeta = filter_var($_POST['carpeta'], FILTER_SANITIZE_SPECIAL_CHARS);
+        
 
-        // Creamos un objeto de la clase alumno con los detalles del formulario
-        $alumno = new classAlumno(
+        // Creamos un objeto de la clase album con los detalles del formulario
+        $album = new classAlbum(
             null,
-            $nombre,
-            $apellidos,
-            $email,
-            $telefono,
-            null,
-            null,
-            null,
-            $nacionalidad,
-            $dni,
-            $fechaNac,
-            $id_curso
+            $titulo,
+            $descripcion,
+            $autor,
+            $fecha,
+            $lugar,
+            $carpeta,
+            0,
+            0,
+            $categoria_id,
         );
+
+        
 
         // Validación de los datos
 
         // Creo un array para almacenar los errores
         $error = [];
 
-        // Validación del nombre
-        // Reglas: obligatorio
-        if (empty($nombre)) {
-            $error['nombre'] = 'El nombre es obligatorio';
+        // Validación del título
+        if (empty($titulo)) {
+            $error['titulo'] = 'El título es obligatorio';
         }
 
-        // Validación de los apellidos
-        // Reglas: obligatorio
-        if (empty($apellidos)) {
-            $error['apellidos'] = 'Los apellidos son obligatorios';
+        // Validación de la descripción
+        if (empty($descripcion)) {
+            $error['descripcion'] = 'La descripción es obligatoria';
         }
 
-        // Validación de la fecha de nacimiento
-        // Reglas: obligatorio, formato fecha
-        if (empty($fechaNac)) {
-            $error['fechaNac'] = 'La fecha de nacimiento es obligatoria';
+        // Validación del autor
+        if (empty($autor)) {
+            $error['autor'] = 'El autor es obligatorio';
+        }
+
+        // Validación de la fecha
+        if (empty($fecha)) {
+            $error['fecha'] = 'La fecha es obligatoria';
         } else {
-            $fecha = DateTime::createFromFormat('Y-m-d', $fechaNac);
-            if (!$fecha) {
-                $error['fechaNac'] = 'El formato de la fecha de nacimiento no es correcto';
+            $fechaObj = DateTime::createFromFormat('Y-m-d', $fecha);
+            if (!$fechaObj) {
+                $error['fecha'] = 'El formato de la fecha no es correcto';
             }
         }
 
-        // Validación del DNI
-        // Reglas: obligatorio, formato DNI y clave secundaria
-
-        // Expresión regular para validar el DNI
-        // 8 números seguidos de una letra
-        $options = [
-            'options' => [
-                'regexp' => '/^(\d{8})([A-Za-z])$/'
-            ]
-        ];
-
-        if (empty($dni)) {
-            $error['dni'] = 'El DNI es obligatorio';
-        } else if (!filter_var($dni, FILTER_VALIDATE_REGEXP, $options)) {
-            $error['dni'] = 'Formato DNI no es correcto';
-        } else if (!$this->model->validateUniqueDNI($dni)) {
-            $error['dni'] = 'El DNI ya existe';
+        // Validación del lugar
+        if (empty($lugar)) {
+            $error['lugar'] = 'El lugar es obligatorio';
         }
 
-        // Validación del email
-        // Reglas: obligatorio, formato email y clave secundaria
-        if (empty($email)) {
-            $error['email'] = 'El email es obligatorio';
-        } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $error['email'] = 'El formato del email no es correcto';
-        } else if (!$this->model->validateUniqueEmail($email)) {
-            $error['email'] = 'El email ya existe';
+        // Validación de la categoría
+        if (empty($categoria_id)) {
+            $error['categoria_id'] = 'La categoría es obligatoria';
+        } else if (!filter_var($categoria_id, FILTER_VALIDATE_INT)) {
+            $error['categoria_id'] = 'El formato de la categoría no es correcto';
         }
 
-        // Validación del teléfono
-        // Reglas: obligatorio, formato teléfono
-        if (empty($telefono)) {
-            $error['telefono'] = 'El teléfono es obligatorio';
-        } else if (!preg_match('/^\d{9}$/', $telefono)) {
-            $error['telefono'] = 'El formato del teléfono no es correcto';
+
+        // Validación de la carpeta
+        if (empty($carpeta)) {
+            $error['carpeta'] = 'La carpeta es obligatoria';
         }
 
-        // Validación de la nacionalidad
-        // Reglas: No obligatorio
-
-        // Validación id_curso
-        // Reglas: obligatorio, entero, clave ajena
-        if (empty($id_curso)) {
-            $error['id_curso'] = 'El curso es obligatorio';
-        } else if (!filter_var($id_curso, FILTER_VALIDATE_INT)) {
-            $error['id_curso'] = 'El formato del curso no es correcto';
-        } else if (!$this->model->validateForeignKeyCurso($id_curso)) {
-            $error['id_curso'] = 'El curso no existe';
-        }
+        
 
         // Si hay errores
         if (!empty($error)) {
-
             // Formulario no ha sido validado
             // Tengo que redireccionar al formulario de nuevo
 
-            // Creo la variable de sessión alumno con los datos del formulario
-            $_SESSION['alumno'] = $alumno;
+            // Creo la variable de sessión album con los datos del formulario
+            $_SESSION['album'] = $album;
 
             // Creo la variable de sessión error con los errores
             $_SESSION['error'] = $error;
 
             // redireciona al formulario de nuevo
-            header('location:' . URL . 'alumno/nuevo');
+            header('location:' . URL . 'album/nuevo');
             exit();
         }
 
-        // Añadimos alumno a la tabla
-        $this->model->create($alumno);
+        // var_dump($categoria_id);
+        // exit();
+
+        // Añadimos album a la tabla
+        $this->model->create($album);
 
         // Genero mensaje de éxito
-        $_SESSION['mensaje'] = 'Alumno añadido con éxito';
+        $_SESSION['mensaje'] = 'Álbum añadido con éxito';
+        
+       
 
-        // redireciona al main de alumno
-        header('location:' . URL . 'alumno');
+        mkdir("images/" . $carpeta);
+
+        // redireciona al main de album
+        header('location:' . URL . 'album');
         exit();
     }
 
     /*
         Método editar()
 
-        Muestra el formulario que permite editar los detalles de un alumno
+        Muestra el formulario que permite editar los detalles de un álbum y agregar imágenes
 
-        url asociada: /alumno/editar/id/csrf_token
+        url asociada: /album/editar/id/csrf_token
 
         @param
-            - int $id: id del alumno a editar
+            - int $id: id del álbum a editar
             - string $csrf_token: token CSRF
-
     */
     function editar($param = [])
     {
@@ -334,18 +313,17 @@ class Album extends Controller
             exit();
         }
         // Comprobar si el usuario tiene permisos
-        else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['editar'])) {
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['editar'])) {
             // Genero mensaje error
             $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
-            header('location:' . URL . 'alumno');
+            header('location:' . URL . 'album');
             exit();
         }
 
-        # obtengo el id del alumno que voy a editar
-        // alumno/edit/4
+        // obtengo el id del álbum que voy a editar
         $this->view->id = htmlspecialchars($param[0]);
 
-        # obtengo el token CSRF
+        // obtengo el token CSRF
         $this->view->csrf_token = $param[1];
 
         // Validación CSRF
@@ -355,17 +333,16 @@ class Album extends Controller
             exit();
         }
 
-        # obtener objeto de la clase alumno con el id asociado
-        $this->view->alumno = $this->model->read($this->view->id);
+        // obtener objeto de la clase album con el id asociado
+        $this->view->album = $this->model->read($this->view->id);
 
         // Comrpuebo si hay errores en la validación
         if (isset($_SESSION['error'])) {
-
             // Creo la propiedad error en la vista
             $this->view->error = $_SESSION['error'];
 
-            // Creo la propiedad alumno en la vista
-            $this->view->alumno = $_SESSION['alumno'];
+            // Creo la propiedad album en la vista
+            $this->view->album = $_SESSION['album'];
 
             // Creo la propiedad mensaje de error
             $this->view->mensaje_error = 'Error en el formulario';
@@ -373,30 +350,30 @@ class Album extends Controller
             // Elimino la variable de sesión error
             unset($_SESSION['error']);
 
-            // Elimino la variable de sesión alumno
-            unset($_SESSION['alumno']);
+            // Elimino la variable de sesión album
+            unset($_SESSION['album']);
         }
 
-        # obtener los cursos
-        $this->view->cursos = $this->model->get_cursos();
+        // obtener las categorías
+        $this->view->categorias = $this->model->get_categorias();
 
-        # title
-        $this->view->title = "Formulario Editar Alumno";
+        // title
+        $this->view->title = "Formulario Editar Álbum";
 
-        # cargo la vista
-        $this->view->render('alumno/editar/index');
+        // cargo la vista
+        $this->view->render('album/editar/index');
     }
 
     /*
         Método update()
 
-        Actualiza los detalles de un alumno
+        Actualiza los detalles de un álbum y agrega imágenes
 
-        url asociada: /alumno/update/id
+        url asociada: /album/update/id
 
-        POST: detalles del alumno
+        POST: detalles del álbum
 
-        @param int $id: id del alumno a editar
+        @param int $id: id del álbum a editar
     */
     public function update($param = [])
     {
@@ -411,14 +388,14 @@ class Album extends Controller
             exit();
         }
         // Comprobar si el usuario tiene permisos
-        else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['editar'])) {
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['editar'])) {
             // Genero mensaje error
             $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
-            header('location:' . URL . 'alumno');
+            header('location:' . URL . 'album');
             exit();
         }
 
-        // obtengo el id del alumno que voy a editar
+        // obtengo el id del álbum que voy a editar
         $id = htmlspecialchars($param[0]);
 
         // obtengo el token CSRF
@@ -433,304 +410,130 @@ class Album extends Controller
 
         // Recogemos los detalles del formulario saneados
         // Prevenir ataques XSS
-        $nombre = filter_var($_POST['nombre'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $apellidos = filter_var($_POST['apellidos'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $fechaNac = filter_var($_POST['fechaNac'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $dni = filter_var($_POST['dni'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $email = filter_var($_POST['email'] ??= '', FILTER_SANITIZE_EMAIL);
-        $telefono = filter_var($_POST['telefono'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $nacionalidad = filter_var($_POST['nacionalidad'] ??= '', FILTER_SANITIZE_SPECIAL_CHARS);
-        $id_curso = filter_var($_POST['id_curso'] ??= '', FILTER_SANITIZE_NUMBER_INT);
+        $titulo = filter_var($_POST['titulo'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $descripcion = filter_var($_POST['descripcion'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $autor = filter_var($_POST['autor'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $fecha = filter_var($_POST['fecha'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $lugar = filter_var($_POST['lugar'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+        $categoria_id = filter_var($_POST['categoria_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
 
-        // Creo un objeto de la clase alumno con los detalles del formulario
-        // Actualizo los detalles del alumno
-        $alumno_form = new classAlumno(
+        // Creo un objeto de la clase album con los detalles del formulario
+        $album_form = new classAlbum(
             $id,
-            $nombre,
-            $apellidos,
-            $email,
-            $telefono,
-            null,
-            null,
-            null,
-            $nacionalidad,
-            $dni,
-            $fechaNac,
-            $id_curso
+            $titulo,
+            $descripcion,
+            $autor,
+            $fecha,
+            $lugar,
+            $categoria_id,
+            0,
+            0,
+            null
         );
 
-        // Obtengo los detalles del alumno de la base de datos
-        $alumno = $this->model->read($id);
+        // Obtengo los detalles del álbum de la base de datos
+        $album = $this->model->read($id);
 
         // Validación de los datos
-        // Valido en caso de que haya sufrido modificaciones el campo correspondiente
         $error = [];
 
-        // Control de cambios en los campos
-        $cambios = false;
+        // Validación del título
+        if (empty($titulo)) {
+            $error['titulo'] = 'El título es obligatorio';
+        }
 
-        // Validación del nombre
-        // Reglas: obligatorio
-        if (strcmp($nombre, $alumno->nombre) != 0) {
-            $cambios = true;
-            if (empty($nombre)) {
-                $error['nombre'] = 'El nombre es obligatorio';
+        // Validación de la descripción
+        if (empty($descripcion)) {
+            $error['descripcion'] = 'La descripción es obligatoria';
+        }
+
+        // Validación del autor
+        if (empty($autor)) {
+            $error['autor'] = 'El autor es obligatorio';
+        }
+
+        // Validación de la fecha
+        if (empty($fecha)) {
+            $error['fecha'] = 'La fecha es obligatoria';
+        } else {
+            $fechaObj = DateTime::createFromFormat('Y-m-d', $fecha);
+            if (!$fechaObj) {
+                $error['fecha'] = 'El formato de la fecha no es correcto';
             }
         }
 
-        // Validación de los apellidos
-        // Reglas: obligatorio
-        if (strcmp($apellidos, $alumno->apellidos) != 0) {
-            $cambios = true;
-            if (empty($apellidos)) {
-                $error['apellidos'] = 'Los apellidos son obligatorios';
-            }
+        // Validación del lugar
+        if (empty($lugar)) {
+            $error['lugar'] = 'El lugar es obligatorio';
         }
 
-        // Validación de la fecha de nacimiento
-        // Reglas: obligatorio, formato fecha
-        if (strcmp($fechaNac, $alumno->fechaNac) != 0) {
-            $cambios = true;
-            if (empty($fechaNac)) {
-                $error['fechaNac'] = 'La fecha de nacimiento es obligatoria';
-            } else {
-                $fecha = DateTime::createFromFormat('Y-m-d', $fechaNac);
-                if (!$fecha) {
-                    $error['fechaNac'] = 'El formato de la fecha de nacimiento no es correcto';
-                }
-            }
-        }
-
-        // Validación del DNI
-        // Reglas: obligatorio, formato DNI y clave secundaria
-        if (strcmp($dni, $alumno->dni) != 0) {
-            $cambios = true;
-            // Expresión regular para validar el DNI
-            // 8 números seguidos de una letra
-            $options = [
-                'options' => [
-                    'regexp' => '/^(\d{8})([A-Za-z])$/'
-                ]
-            ];
-
-            if (empty($dni)) {
-                $error['dni'] = 'El DNI es obligatorio';
-            } else if (!filter_var($dni, FILTER_VALIDATE_REGEXP, $options)) {
-                $error['dni'] = 'Formato DNI no es correcto';
-            } else if (!$this->model->validateUniqueDNI($dni)) {
-                $error['dni'] = 'El DNI ya existe';
-            }
-        }
-
-        // Validación del email
-        // Reglas: obligatorio, formato email y clave secundaria
-        if (strcmp($email, $alumno->email) != 0) {
-            $cambios = true;
-            if (empty($email)) {
-                $error['email'] = 'El email es obligatorio';
-            } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                $error['email'] = 'El formato del email no es correcto';
-            } else if (!$this->model->validateUniqueEmail($email)) {
-                $error['email'] = 'El email ya existe';
-            }
-        }
-
-        // Validación del teléfono
-        // Reglas: obligatorio, formato teléfono
-        if (strcmp($telefono, $alumno->telefono) != 0) {
-            $cambios = true;
-            if (empty($telefono)) {
-                $error['telefono'] = 'El teléfono es obligatorio';
-            } else if (!preg_match('/^\d{9}$/', $telefono)) {
-                $error['telefono'] = 'El formato del teléfono no es correcto';
-            }
-        }
-
-        // Validación de la nacionalidad
-        // Reglas: No obligatorio
-
-        // Validación id_curso
-        // Reglas: obligatorio, entero, clave ajena
-        if ($id_curso = ! $alumno->id_curso) {
-            $cambios = true;
-            if (empty($id_curso)) {
-                $error['id_curso'] = 'El curso es obligatorio';
-            } else if (!filter_var($id_curso, FILTER_VALIDATE_INT)) {
-                $error['id_curso'] = 'El formato del curso no es correcto';
-            } else if (!$this->model->validateForeignKeyCurso($id_curso)) {
-                $error['id_curso'] = 'El curso no existe';
-            }
+        // Validación de la categoría
+        if (empty($categoria_id)) {
+            $error['categoria_id'] = 'La categoría es obligatoria';
+        } else if (!filter_var($categoria_id, FILTER_VALIDATE_INT)) {
+            $error['categoria_id'] = 'El formato de la categoría no es correcto';
         }
 
         // Si hay errores
         if (!empty($error)) {
-
             // Formulario no ha sido validado
             // Tengo que redireccionar al formulario de nuevo
 
-            // Creo la variable de sessión alumno con los datos del formulario
-            $_SESSION['alumno'] = $alumno_form;
+            // Creo la variable de sessión album con los datos del formulario
+            $_SESSION['album'] = $album_form;
 
             // Creo la variable de sessión error con los errores
             $_SESSION['error'] = $error;
 
             // redireciona al formulario de nuevo
-            header('location:' . URL . 'alumno/editar/' . $id . '/' . $csrf_token);
+            header('location:' . URL . 'album/editar/' . $id . '/' . $csrf_token);
             exit();
         }
 
-        // Compruebo si ha habido cambios
-        if (!$cambios) {
-            // Genero mensaje de éxito
-            $_SESSION['mensaje'] = 'No se han realizado cambios';
+        // Actualizo los detalles del álbum
+        $this->model->update($album_form, $id);
 
-            // redireciona al main de alumno
-            header('location:' . URL . 'alumno');
+        // Validaciones de las imágenes
+        $error = [];
+        $maxFileSize = 5 * 1024 * 1024; // 5MB
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
+            $fileSize = $_FILES['imagenes']['size'][$key];
+            $fileType = $_FILES['imagenes']['type'][$key];
+
+            if ($fileSize > $maxFileSize) {
+                $error[] = 'El tamaño de la imagen no debe superar los 5MB';
+            }
+
+            if (!in_array($fileType, $allowedTypes)) {
+                $error[] = 'El tipo de archivo no es válido. Solo se permiten JPG, PNG y GIF';
+            }
+        }
+
+        // Si hay errores
+        if (!empty($error)) {
+            $_SESSION['error'] = $error;
+            header('location:' . URL . 'album/editar/' . $id . '/' . $csrf_token);
             exit();
         }
-        // Necesito crear el método update en el modelo
-        $this->model->update($alumno_form, $id);
+
+        // Guardar las imágenes
+        $carpeta = 'images/' . $album->carpeta;
+        foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
+            $fileName = basename($_FILES['imagenes']['name'][$key]);
+            move_uploaded_file($tmp_name, $carpeta . '/' . $fileName);
+        }
 
         // Genero mensaje de éxito
-        $_SESSION['mensaje'] = 'Alumno actualizado con éxito';
+        $_SESSION['mensaje'] = 'Álbum actualizado con éxito';
 
-        # Cargo el controlador principal de alumno
-        header('location:' . URL . 'alumno');
+        // redireciona al main de album
+        header('location:' . URL . 'album');
         exit();
     }
 
-    /*
-        Método eliminar()
-
-        Borra un alumno de la base de datos
-
-        url asociada: /alumno/eliminar/id
-
-        @param
-            :int $id: id del alumno a eliminar
-    */
-    public function eliminar($param = [])
-    {
-
-        // inicio o continuo la sesión
-        session_start();
-
-        // Comprobar si hay un usuario logueado
-        if (!isset($_SESSION['user_id'])) {
-            // Genero mensaje error
-            $_SESSION['mensaje_error'] = 'Acceso denegado';
-            header('location:' . URL . 'auth/login');
-            exit();
-        }
-        // Comprobar si el usuario tiene permisos
-        else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['eliminar'])) {
-            // Genero mensaje error
-            $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
-            header('location:' . URL . 'alumno');
-            exit();
-        }
-
-        // obtengo el id del alumno que voy a eliminar
-        $id = htmlspecialchars($param[0]);
-
-        // obtengo el token CSRF
-        $csrf_token = $param[1];
-
-        // Validación CSRF
-        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
-            require_once 'controllers/error.php';
-            $controller = new Errores('Petición no válida');
-            exit();
-        }
-
-        // Validar id del alumno
-        // validateIdAlumno($id) si existe devuelve TRUE
-        if (!$this->model->validateIdAlumno($id)) {
-            // Genero mensaje de error
-            $_SESSION['error'] = 'ID no válido';
-
-            // redireciona al main de alumno
-            header('location:' . URL . 'alumno');
-            exit();
-        }
-
-        // Id ha sido validado
-        // Elimino al alumno de la base de datos
-        $this->model->delete($id);
-
-        // Genero mensaje de éxito
-        $_SESSION['mensaje'] = 'Alumno eliminado con éxito';
-
-        # Cargo el controlador principal de alumno
-        header('location:' . URL . 'alumno');
-    }
-
-    /*
-        Método mostrar()
-
-        Muestra los detalles de un alumno
-
-        url asociada: /alumno/mostrar/id
-
-        @param
-            :int $id: id del alumno a mostrar
-    */
-    public function mostrar($param = [])
-    {
-        // inicio o continuo la sesión
-        session_start();
-
-        // Comprobar si hay un usuario logueado
-        if (!isset($_SESSION['user_id'])) {
-            // Genero mensaje error
-            $_SESSION['mensaje_error'] = 'Acceso denegado';
-            header('location:' . URL . 'auth/login');
-            exit();
-        }
-        // Comprobar si el usuario tiene permisos
-        else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['mostrar'])) {
-            // Genero mensaje error
-            $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
-            header('location:' . URL . 'alumno');
-            exit();
-        }
-
-        // obtengo el id del alumno que voy a eliminar
-        $id = htmlspecialchars($param[0]);
-
-        // obtengo el token CSRF
-        $csrf_token = $param[1];
-
-        // Validación CSRF
-        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
-            require_once 'controllers/error.php';
-            $controller = new Errores('Petición no válida');
-            exit();
-        }
-
-        // Validar id del alumno
-        // validateIdAlumno($id) si existe devuelve TRUE
-        if (!$this->model->validateIdAlumno($id)) {
-            // Genero mensaje de error
-            $_SESSION['error'] = 'ID no válido';
-
-            // redireciona al main de alumno
-            header('location:' . URL . 'alumno');
-            exit();
-        }
-
-        # Cargo el título
-        $this->view->title = "Mostrar - Gestión de Alumnos";
-
-        # Obtengo los detalles del alumno mediante el método read del modelo
-        $this->view->alumno = $this->model->read($id);
-
-        # obtener los cursos
-        $this->view->cursos = $this->model->get_cursos();
-
-        # Cargo la vista
-        $this->view->render('alumno/mostrar/index');
-    }
+    
 
     /*
         Método filtrar()
@@ -851,5 +654,240 @@ class Album extends Controller
 
         # Cargo la vista
         $this->view->render('alumno/main/index');
+    }
+
+    public function agregar_imagenes($param = [])
+    {
+        // inicio o continuo la sesión
+        session_start();
+
+        // Comprobar si hay un usuario logueado
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado';
+            header('location:' . URL . 'auth/login');
+            exit();
+        }
+
+        // Comprobar si el usuario tiene permisos
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['editar'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
+            header('location:' . URL . 'album');
+            exit();
+        }
+
+        // Creo un token CSRF
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+
+        // obtengo el id del álbum
+        $this->view->id = htmlspecialchars($param[0]);
+
+        // obtengo el token CSRF
+        $this->view->csrf_token = $param[1];
+
+        // Validación CSRF
+        if (!hash_equals($_SESSION['csrf_token'], $this->view->csrf_token)) {
+            require_once 'controllers/error.php';
+            $controller = new Errores('Petición no válida');
+            exit();
+        }
+
+        // obtener objeto de la clase album con el id asociado
+        $this->view->album = $this->model->read($this->view->id);
+
+        // Creo la propiead título
+        $this->view->title = "Agregar Imágenes - Gestión de Albumes";
+
+        // Cargo la vista asociada a este método
+        $this->view->render('album/agregar_imagenes/index');
+    }
+
+    public function guardar_imagenes()
+    {
+        // inicio o continuo la sesión
+        session_start();
+
+        // Comprobar si hay un usuario logueado
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado';
+            header('location:' . URL . 'auth/login');
+            exit();
+        }
+
+        // Comprobar si el usuario tiene permisos
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['agregar'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
+            header('location:' . URL . 'album');
+            exit();
+        }
+
+        // Validación CSRF
+        if (!hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+            header('location:' . URL . 'errores');
+            exit();
+        }
+
+        // obtengo el id del álbum
+        $id = htmlspecialchars($_POST['id']);
+
+        // obtengo el token CSRF
+        $csrf_token = $_POST['csrf_token'];
+
+        // Validación CSRF
+        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+            require_once 'controllers/error.php';
+            $controller = new Errores('Petición no válida');
+            exit();
+        }
+
+        // obtener objeto de la clase album con el id asociado
+        $album = $this->model->read($id);
+
+        // Validaciones de las imágenes
+        $error = [];
+        $maxFileSize = 5 * 1024 * 1024; // 5MB
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+        foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
+            $fileSize = $_FILES['imagenes']['size'][$key];
+            $fileType = $_FILES['imagenes']['type'][$key];
+
+            if ($fileSize > $maxFileSize) {
+                $error[] = 'El tamaño de la imagen no debe superar los 5MB';
+            }
+
+            if (!in_array($fileType, $allowedTypes)) {
+                $error[] = 'El tipo de archivo no es válido. Solo se permiten JPG, PNG y GIF';
+            }
+        }
+
+        // Si hay errores
+        if (!empty($error)) {
+            $_SESSION['error'] = $error;
+            header('location:' . URL . 'album/agregar_imagenes/' . $id . '/' . $csrf_token);
+            exit();
+        }
+
+        // Guardar las imágenes
+        $carpeta = 'images/' . $album->carpeta;
+        foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
+            $fileName = basename($_FILES['imagenes']['name'][$key]);
+            move_uploaded_file($tmp_name, $carpeta . '/' . $fileName);
+        }
+
+        // Genero mensaje de éxito
+        $_SESSION['mensaje'] = 'Imágenes añadidas con éxito';
+
+        // redireciona al main de album
+        header('location:' . URL . 'album');
+        exit();
+    }
+
+    public function eliminar($param = [])
+    {
+        // inicio o continuo la sesión
+        session_start();
+
+        // Comprobar si hay un usuario logueado
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado';
+            header('location:' . URL . 'auth/login');
+            exit();
+        }
+
+        // Comprobar si el usuario tiene permisos
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['eliminar'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
+            header('location:' . URL . 'album');
+            exit();
+        }
+
+        // obtengo el id del álbum que voy a eliminar
+        $id = htmlspecialchars($param[0]);
+
+        // obtengo el token CSRF
+        $csrf_token = $param[1];
+
+        // Validación CSRF
+        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+            require_once 'controllers/error.php';
+            $controller = new Errores('Petición no válida');
+            exit();
+        }
+
+        // Validar id del álbum
+        if (!$this->model->validateIdAlbum($id)) {
+            $_SESSION['error'] = 'ID no válido';
+            header('location:' . URL . 'album');
+            exit();
+        }
+
+        // Id ha sido validado
+        // Elimino el álbum de la base de datos
+        $album = $this->model->read($id);
+        $this->model->delete($id);
+
+        // Elimino la carpeta del álbum
+        $carpeta = 'images/' . $album->carpeta;
+        array_map('unlink', glob("$carpeta/*.*"));
+        rmdir($carpeta);
+
+        // Genero mensaje de éxito
+        $_SESSION['mensaje'] = 'Álbum eliminado con éxito';
+
+        // redireciona al main de album
+        header('location:' . URL . 'album');
+    }
+
+    public function mostrar($param = [])
+    {
+        // inicio o continuo la sesión
+        session_start();
+
+        // Comprobar si hay un usuario logueado
+        if (!isset($_SESSION['user_id'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado';
+            header('location:' . URL . 'auth/login');
+            exit();
+        }
+
+        // Comprobar si el usuario tiene permisos
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['mostrar'])) {
+            $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
+            header('location:' . URL . 'album');
+            exit();
+        }
+
+        // obtengo el id del álbum que voy a mostrar
+        $id = htmlspecialchars($param[0]);
+
+        // obtengo el token CSRF
+        $csrf_token = $param[1];
+
+        // Validación CSRF
+        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
+            require_once 'controllers/error.php';
+            $controller = new Errores('Petición no válida');
+            exit();
+        }
+
+        // Validar id del álbum
+        if (!$this->model->validateIdAlbum($id)) {
+            $_SESSION['error'] = 'ID no válido';
+            header('location:' . URL . 'album');
+            exit();
+        }
+
+        // Cargo el título
+        $this->view->title = "Mostrar - Gestión de Álbumes";
+
+        // Obtengo los detalles del álbum mediante el método read del modelo
+        $this->view->album = $this->model->read($id);
+
+        // Obtengo las imágenes del álbum
+        $carpeta = 'images/' . $this->view->album->carpeta;
+        $this->view->imagenes = array_diff(scandir($carpeta), ['.', '..']);
+
+        // Cargo la vista
+        $this->view->render('album/mostrar/index');
     }
 }

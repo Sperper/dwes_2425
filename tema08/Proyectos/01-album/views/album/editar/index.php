@@ -27,137 +27,117 @@
                 <h5 class="card-title"><?= htmlspecialchars($this->title) ?></h5>
             </div>
             <div class="card-body">
-                <!-- Formulario de alumnos  -->
-                <form action="<?= URL ?>alumno/update/<?= $this->id ?>/<?= $this->csrf_token?>" method="POST">
+                <!-- Formulario de álbumes  -->
+                <form action="<?= URL ?>album/update/<?= $this->id ?>/<?= $this->csrf_token ?>" method="POST" enctype="multipart/form-data">
 
                     <!-- protección CSRF -->
                     <input type="hidden" name="csrf_token"
                         value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
 
-                    <!-- id oculto -->
-                    <!-- Tengo que pasar el id oculto para que el controlador pueda validar doblemente el id -->
-                    <input type="number" class="form-control" name="id" 
-                    value="<?= htmlspecialchars($this->alumno->id) ?>" hidden>
-                    
-                    <!-- Nombre -->
+                    <!-- Título -->
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
+                        <label for="titulo" class="form-label">Título</label>
                         <input type="text" class="form-control
-                            <?= (isset($this->error['nombre'])) ? 'is-invalid' : null ?>" id="nombre" name="nombre"
-                            placeholder="Introduzca nombre" value="<?= htmlspecialchars($this->alumno->nombre) ?>"
+                            <?= (isset($this->error['titulo']))? 'is-invalid': null ?>" 
+                            id="titulo" name="titulo"
+                            placeholder="Introduzca título" value="<?= htmlspecialchars($this->album->titulo) ?>"
                             required>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
-                            <?= $this->error['nombre'] ??= null ?>
+                            <?= $this->error['titulo'] ??= null ?>
                         </span>
                     </div>
-
-                    <!-- Apellidos -->
+                    <!-- Descripción -->
                     <div class="mb-3">
-                        <label for="apellidos" class="form-label">Apellidos</label>
-                        <input type="text" class="form-control
-                            <?= (isset($this->error['apellidos'])) ? 'is-invalid' : null ?>" id="apellidos"
-                            name="apellidos" placeholder="Introduzca apellidos"
-                            value="<?= htmlspecialchars($this->alumno->apellidos) ?>" required>
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control
+                            <?= (isset($this->error['descripcion']))? 'is-invalid': null ?>" 
+                            id="descripcion" name="descripcion"
+                            placeholder="Introduzca descripción" required><?= htmlspecialchars($this->album->descripcion) ?></textarea>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
-                            <?= $this->error['apellidos'] ??= null ?>
+                            <?= $this->error['descripcion'] ??= null ?>
+                        </span>   
+                    </div>
+                    <!-- Autor -->
+                    <div class="mb-3">
+                        <label for="autor" class="form-label">Autor</label>
+                        <input type="text" class="form-control
+                            <?= (isset($this->error['autor']))? 'is-invalid': null ?>" 
+                            id="autor" name="autor"
+                            placeholder="Introduzca autor" value="<?= htmlspecialchars($this->album->autor) ?>"
+                            required>
+                        <!-- mostrar posible error -->
+                        <span class="form-text text-danger" role="alert">
+                            <?= $this->error['autor'] ??= null ?>
                         </span>
                     </div>
-
-                    <!-- Fecha Nacimiento -->
+                    <!-- Fecha -->
                     <div class="mb-3">
-                        <label for="fechaNac" class="form-label">Fecha Nacimiento</label>
+                        <label for="fecha" class="form-label">Fecha</label>
                         <input type="date" class="form-control 
-                            <?= (isset($this->error['fechaNac'])) ? 'is-invalid' : null ?>" id="fechaNac" name="fechaNac"
-                            value="<?= htmlspecialchars($this->alumno->fechaNac) ?>" required>
+                            <?= (isset($this->error['fecha']))? 'is-invalid': null ?>" 
+                            id="fecha" name="fecha"
+                            value="<?= htmlspecialchars($this->album->fecha) ?>" required>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
-                            <?= $this->error['fechaNac'] ??= null ?>
+                            <?= $this->error['fecha'] ??= null ?>
                         </span>
                     </div>
-
-                    <!-- Dni -->
+                    <!-- Lugar -->
                     <div class="mb-3">
-                        <label for="dni" class="form-label">Dni</label>
+                        <label for="lugar" class="form-label">Lugar</label>
                         <input type="text" class="form-control 
-                            <?= (isset($this->error['dni'])) ? 'is-invalid' : null ?>" id="dni" name="dni"
-                            placeholder="11111111A" value="<?= htmlspecialchars($this->alumno->dni) ?>" required
-                            pattern="^[0-9]{8}[A-Za-z]{1}$" title="8 dígitos y una letra">
-                        <!-- mostrar posible error -->
-                        <span class="form-text text-danger" role="alert">
-                            <?= $this->error['dni'] ??= null ?>
-                        </span>
-                    </div>
-
-                    <!-- Email -->
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control 
-                            <?= (isset($this->error['email'])) ? 'is-invalid' : null ?>" id="email" name="email"
-                            placeholder="email@ejemplo.es" value="<?= htmlspecialchars($this->alumno->email) ?>"
+                            <?= (isset($this->error['lugar']))? 'is-invalid': null ?>" 
+                            id="lugar" name="lugar"
+                            placeholder="Introduzca lugar" value="<?= htmlspecialchars($this->album->lugar) ?>" 
                             required>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
-                            <?= $this->error['email'] ??= null ?>
-                        </span>
+                            <?= $this->error['lugar'] ??= null ?>
+                        </span> 
                     </div>
 
-                    <!-- Telefono -->
+                    <!-- Categorías -->
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Teléfono</label>
-                        <input type="tel" class="form-control 
-                            <?= (isset($this->error['telefono'])) ? 'is-invalid' : null ?>" id="telefono" name="telefono"
-                            placeholder="666666666" value="<?= htmlspecialchars($this->alumno->telefono) ?>" required
-                            title="9 dígitos">
-                        <!-- mostrar posible error -->
-                        <span class="form-text text-danger" role="alert">
-                            <?= $this->error['telefono'] ??= null ?>
-                        </span>
-                    </div>
-
-                    <!-- Nacionalidad -->
-                    <div class="mb-3">
-                        <label for="nacionalidad" class="form-label">Nacionalidad</label>
-                        <input type="text" class="form-control 
-                            <?= (isset($this->error['nacionalidad'])) ? 'is-invalid' : null ?>" id="nacionalidad"
-                            name="nacionalidad" placeholder="Introduzca nacionalidad"
-                            value="<?= htmlspecialchars($this->alumno->nacionalidad) ?>">
-                        <!-- mostrar posible error -->
-                        <span class="form-text text-danger" role="alert">
-                            <?= $this->error['nacionalidad'] ??= null ?>
-                        </span>
-                    </div>
-
-                    <!-- Select Dinámico Cursos -->
-                    <div class="mb-3">
-                        <label for="id_curso" class="form-label">Curso</label>
-                        <select class="form-select 
-                            <?= (isset($this->error['id_curso'])) ? 'is-invalid' : null ?>" id="id_curso" name="id_curso"
-                            required>
-                            <option selected disabled>Seleccione curso</option>
-                            <!-- mostrar lista cucrsos -->
-                            <?php foreach ($this->cursos as $indice => $data): ?>
-                                <option value="<?= $indice ?>" <?= $this->alumno->id_curso == $indice ? 'selected' : '' ?>>
-                                    <?= $data ?>
+                        <label for="categoria_id" class="form-label">Categoría</label>
+                        <select class="form-control 
+                            <?= (isset($this->error['categoria_id']))? 'is-invalid': null ?>" 
+                            id="categoria_id" name="categoria_id" required>
+                            <option value="">Seleccione una categoría</option>
+                            <?php foreach ($this->categorias as $id => $nombre): ?>
+                                <option value="<?= $id ?>" <?= ($this->album->categoria_id == $id) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($nombre) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
-                            <?= $this->error['id_curso'] ??= null ?>
+                            <?= $this->error['categoria_id'] ??= null ?>
+                        </span>
+                    </div>
+
+                    <!-- Imágenes -->
+                    <div class="mb-3">
+                        <label for="imagenes" class="form-label">Imágenes</label>
+                        <input type="file" class="form-control
+                            <?= (isset($this->error['imagenes']))? 'is-invalid': null ?>" 
+                            id="imagenes" name="imagenes[]" multiple accept="image/jpeg, image/png, image/gif">
+                        <!-- mostrar posible error -->
+                        <span class="form-text text-danger" role="alert">
+                            <?= $this->error['imagenes'] ??= null ?>
                         </span>
                     </div>
             </div>
             <div class="card-footer">
                 <!-- botones de acción -->
-                <a class="btn btn-secondary" href="<?= URL ?>alumno" role="button"
-                    onclick="return confirm('¿Estás seguro de que deseas cancelar? Se perderán los datos ingresados.')">Cancelar</a>
-                <button type="reset" class="btn btn-danger">Restaurar</button>
-                <button type="submit" class="btn btn-primary">Actualizar</button>
+                <a class="btn btn-secondary" href="<?= URL ?>album" role="button" 
+                onclick="return confirm('¿Estás seguro de que deseas cancelar? Se perderán los datos ingresados.')">Cancelar</a>
+                <button type="reset" class="btn btn-danger">Borrar</button>
+                <button type="submit" class="btn btn-primary">Enviar</button>
             </div>
             </form>
-            <!-- Fin formulario nuevo artículo -->
+            <!-- Fin formulario editar álbum -->
         </div>
         <br><br><br>
 

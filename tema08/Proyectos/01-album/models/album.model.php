@@ -31,8 +31,7 @@ class albumModel extends Model
                 autor,
                 fecha,
                 lugar,
-                categoria,
-                etiquetas,
+                categoria_id,
                 num_fotos,
                 num_visitas,
                 carpeta
@@ -66,25 +65,22 @@ class albumModel extends Model
     }
 
     /*
-       método: get_cursos()
+       método: get_categorias()
 
-       Extre los detalles de los cursos para generar lista desplegable 
+       Extrae los detalles de las categorías para generar lista desplegable 
        dinámica
    */
-    public function get_cursos()
+    public function get_categorias()
     {
-
         try {
-
             // sentencia sql
             $sql = "SELECT 
                         id,
-                        nombre as curso
+                        nombre
                     FROM 
-                        cursos
+                        categorias
                     ORDER BY
-                        2
-            ";
+                        nombre";
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -101,7 +97,6 @@ class albumModel extends Model
             // devuelvo objeto stmtatement
             return $stmt->fetchAll();
         } catch (PDOException $e) {
-
             // error base de datos
             require 'template/partials/errorDB.partial.php';
             $stmt = null;
@@ -117,48 +112,48 @@ class albumModel extends Model
         parámetros: objeto de classAlumno
     */
 
-    public function create(classAlumno $alumno)
+    public function create(classAlbum $album)
     {
-
         try {
-            $sql = "INSERT INTO Alumnos (
-                    nombre,
-                    apellidos,
-                    email,
-                    telefono,
-                    nacionalidad,
-                    dni,
-                    fechaNac,
-                    id_curso
+            $sql = "INSERT INTO albumes (
+                    titulo,
+                    descripcion,
+                    autor,
+                    fecha,
+                    lugar,
+                    num_fotos,
+                    num_visitas,
+                    carpeta,
+                    categoria_id
                 )
                 VALUES (
-                    :nombre,
-                    :apellidos,
-                    :email,
-                    :telefono,
-                    :nacionalidad,
-                    :dni,
-                    :fechaNac,
-                    :id_curso
+                    :titulo,
+                    :descripcion,
+                    :autor,
+                    :fecha,
+                    :lugar,
+                    0,
+                    0,
+                    :carpeta,
+                    :categoria_id
                 )
             ";
             # Conectar con la base de datos
             $conexion = $this->db->connect();
 
-
             $stmt = $conexion->prepare($sql);
 
-            $stmt->bindParam(':nombre', $alumno->nombre, PDO::PARAM_STR, 30);
-            $stmt->bindParam(':apellidos', $alumno->apellidos, PDO::PARAM_STR, 50);
-            $stmt->bindParam(':email', $alumno->email, PDO::PARAM_STR, 50);
-            $stmt->bindParam(':telefono', $alumno->telefono, PDO::PARAM_STR, 13);
-            $stmt->bindParam(':nacionalidad', $alumno->nacionalidad, PDO::PARAM_STR, 30);
-            $stmt->bindParam(':dni', $alumno->dni, PDO::PARAM_STR, 9);
-            $stmt->bindParam(':fechaNac', $alumno->fechaNac, PDO::PARAM_STR);
-            $stmt->bindParam(':id_curso', $alumno->id_curso, PDO::PARAM_INT);
+            
 
+            $stmt->bindParam(':titulo', $album->titulo, PDO::PARAM_STR, 100);
+            $stmt->bindParam(':descripcion', $album->descripcion, PDO::PARAM_STR, 255);
+            $stmt->bindParam(':autor', $album->autor, PDO::PARAM_STR, 50);
+            $stmt->bindParam(':fecha', $album->fecha, PDO::PARAM_STR);
+            $stmt->bindParam(':lugar', $album->lugar, PDO::PARAM_STR, 100);
+            $stmt->bindParam(':categoria_id', $album->categoria_id, PDO::PARAM_INT);
+            $stmt->bindParam(':carpeta', $album->carpeta, PDO::PARAM_STR, 100);
 
-            // añado alumno
+            // añado album
             $stmt->execute();
         } catch (PDOException $e) {
             // error base de datos
@@ -183,26 +178,26 @@ class albumModel extends Model
 
         try {
             $sql = "
-                    SELECT 
-                            id,
-                            nombre, 
-                            apellidos,
-                            email,
-                            telefono,
-                            nacionalidad,
-                            dni,
-                            fechaNac,
-                            id_curso
-                    FROM 
-                            alumnos
-                    WHERE
-                            id = :id
-                    LIMIT 1
+                SELECT 
+                    id,
+                    titulo,
+                    descripcion,
+                    autor,
+                    fecha,
+                    lugar,
+                    categoria_id,
+                    num_fotos,
+                    num_visitas,
+                    carpeta
+                FROM 
+                    albumes
+                WHERE
+                    id = :id
+                LIMIT 1
             ";
 
             # Conectar con la base de datos
             $conexion = $this->db->connect();
-
 
             $stmt = $conexion->prepare($sql);
 
@@ -212,62 +207,56 @@ class albumModel extends Model
 
             return $stmt->fetch();
         } catch (PDOException $e) {
-            // // error base de datos
+            // error base de datos
             require_once 'template/partials/errorDB.partial.php';
             $stmt = null;
             $conexion = null;
             $this->db = null;
             exit();
-
         }
     }
 
     /*
         método: update
 
-        descripción: actualiza los detalles de un alumno
+        descripción: actualiza los detalles de un álbum
 
         @param:
-            - objeto de classAlumno
-            - id del alumno
+            - objeto de classAlbum
+            - id del álbum
     */
 
-    public function update(classAlumno $alumno, $id)
+    public function update(classAlbum $album, $id)
     {
-
         try {
-
             $sql = "
-            
-            UPDATE alumnos
-            SET
-                    nombre = :nombre,
-                    apellidos = :apellidos,
-                    email = :email,
-                    telefono = :telefono,
-                    nacionalidad = :nacionalidad,
-                    dni = :dni,
-                    fechaNac = :fechaNac,
-                    id_curso = :id_curso
-            WHERE
+                UPDATE albumes
+                SET
+                    titulo = :titulo,
+                    descripcion = :descripcion,
+                    autor = :autor,
+                    fecha = :fecha,
+                    num_fotos = :num_fotos,
+                    lugar = :lugar,
+                    categoria_id = :categoria_id
+                WHERE
                     id = :id
-            LIMIT 1
+                LIMIT 1
             ";
 
             $conexion = $this->db->connect();
-
             $stmt = $conexion->prepare($sql);
 
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $num_fotos = count(glob("images/{$album->carpeta}/*.{jpg,png,gif}", GLOB_BRACE));
+            $stmt->bindParam(':num_fotos', $num_fotos, PDO::PARAM_INT);
 
-            $stmt->bindParam(':nombre', $alumno->nombre, PDO::PARAM_STR, 30);
-            $stmt->bindParam(':apellidos', $alumno->apellidos, PDO::PARAM_STR, 50);
-            $stmt->bindParam(':email', $alumno->email, PDO::PARAM_STR, 50);
-            $stmt->bindParam(':telefono', $alumno->telefono, PDO::PARAM_STR, 9);
-            $stmt->bindParam(':nacionalidad', $alumno->nacionalidad, PDO::PARAM_STR, 30);
-            $stmt->bindParam(':dni', $alumno->dni, PDO::PARAM_STR, 9);
-            $stmt->bindParam(':fechaNac', $alumno->fechaNac, PDO::PARAM_STR);
-            $stmt->bindParam(':id_curso', $alumno->id_curso, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->bindParam(':titulo', $album->titulo, PDO::PARAM_STR, 100);
+            $stmt->bindParam(':descripcion', $album->descripcion, PDO::PARAM_STR, 255);
+            $stmt->bindParam(':autor', $album->autor, PDO::PARAM_STR, 50);
+            $stmt->bindParam(':fecha', $album->fecha, PDO::PARAM_STR);
+            $stmt->bindParam(':lugar', $album->lugar, PDO::PARAM_STR, 100);
+            $stmt->bindParam(':categoria_id', $album->categoria_id, PDO::PARAM_INT);
 
             $stmt->execute();
         } catch (PDOException $e) {
@@ -294,7 +283,7 @@ class albumModel extends Model
         try {
 
             $sql = "
-                DELETE FROM alumnos
+                DELETE FROM albumes
                 WHERE id = :id
                 LIMIT 1
             ";
@@ -633,4 +622,29 @@ class albumModel extends Model
             exit();
         }
     }
+
+    public function validateIdAlbum(int $id)
+    {
+        try {
+            $sql = "SELECT id FROM albumes WHERE id = :id";
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
+
+            if ($stmt->rowCount() == 1) {
+                return TRUE;
+            }
+
+            return FALSE;
+        } catch (PDOException $e) {
+            require_once 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+            exit();
+        }
+    }
+
+    
 }

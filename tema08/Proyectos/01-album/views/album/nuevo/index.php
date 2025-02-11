@@ -98,56 +98,22 @@
                         </span> 
                     </div>
 
-                    <!-- Categoría -->
+                    <!-- Categorías -->
                     <div class="mb-3">
-                        <label for="categoria" class="form-label">Categoría</label>
-                        <input type="text" class="form-control 
-                            <?= (isset($this->error['categoria']))? 'is-invalid': null ?>" 
-                            id="categoria" name="categoria"
-                            placeholder="Introduzca categoría" value="<?= htmlspecialchars($this->album->categoria) ?>"
-                            required>
+                        <label for="categoria_id" class="form-label">Categoría</label>
+                        <select class="form-control 
+                            <?= (isset($this->error['categoria_id']))? 'is-invalid': null ?>" 
+                            id="categoria_id" name="categoria_id" required>
+                            <option value="">Seleccione una categoría</option>
+                            <?php foreach ($this->categorias as $id => $nombre): ?>
+                                <option value="<?= $id ?>" <?= ($this->album->categoria_id == $id) ? 'selected' : '' ?>>
+                                    <?= htmlspecialchars($nombre) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
-                            <?= $this->error['categoria'] ??= null ?>
-                        </span>
-                    </div>
-                    <!-- Etiquetas -->
-                    <div class="mb-3">
-                        <label for="etiquetas" class="form-label">Etiquetas</label>
-                        <input type="text" class="form-control 
-                            <?= (isset($this->error['etiquetas']))? 'is-invalid': null ?>" 
-                            id="etiquetas" name="etiquetas"
-                            placeholder="Introduzca etiquetas" value="<?= htmlspecialchars($this->album->etiquetas) ?>"
-                            required>
-                        <!-- mostrar posible error -->
-                        <span class="form-text text-danger" role="alert">
-                            <?= $this->error['etiquetas'] ??= null ?>
-                        </span>
-                    </div>
-                    <!-- Número de Fotos -->
-                    <div class="mb-3">
-                        <label for="num_fotos" class="form-label">Número de Fotos</label>
-                        <input type="number" class="form-control 
-                            <?= (isset($this->error['num_fotos']))? 'is-invalid': null ?>" 
-                            id="num_fotos" name="num_fotos"
-                            placeholder="Introduzca número de fotos" value="<?= htmlspecialchars($this->album->num_fotos) ?>"
-                            required>
-                        <!-- mostrar posible error -->
-                        <span class="form-text text-danger" role="alert">
-                            <?= $this->error['num_fotos'] ??= null ?>
-                        </span>
-                    </div>
-                    <!-- Número de Visitas -->
-                    <div class="mb-3">
-                        <label for="num_visitas" class="form-label">Número de Visitas</label>
-                        <input type="number" class="form-control 
-                            <?= (isset($this->error['num_visitas']))? 'is-invalid': null ?>" 
-                            id="num_visitas" name="num_visitas"
-                            placeholder="Introduzca número de visitas" value="<?= htmlspecialchars($this->album->num_visitas) ?>"
-                            required>
-                        <!-- mostrar posible error -->
-                        <span class="form-text text-danger" role="alert">
-                            <?= $this->error['num_visitas'] ??= null ?>
+                            <?= $this->error['categoria_id'] ??= null ?>
                         </span>
                     </div>
                     <!-- Carpeta -->

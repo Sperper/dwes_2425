@@ -44,9 +44,8 @@
                                 <th>Fecha</th>
                                 <th>Lugar</th>
                                 <th>Categoría</th>
-                                <th>Etiquetas</th>
                                 <th>Número de Fotos</th>
-                                <th>Número de Visitas</th>
+                                <th>Visitas</th>
                                 <th>Carpeta</th>
                                 <!-- columna de acciones -->
                                 <th>Acciones</th>
@@ -63,8 +62,7 @@
                                     <td><?= $album->autor ?></td>
                                     <td><?= $album->fecha ?></td>
                                     <td><?= $album->lugar ?></td>
-                                    <td><?= $album->categoria ?></td>
-                                    <td><?= $album->etiquetas ?></td>
+                                    <td><?= $this->categorias[$album->categoria_id] ?? 'Sin categoría' ?></td>
                                     <td><?= $album->num_fotos ?></td>
                                     <td><?= $album->num_visitas ?></td>
                                     <td><?= $album->carpeta ?></td>

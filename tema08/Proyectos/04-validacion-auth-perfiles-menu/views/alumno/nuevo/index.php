@@ -141,7 +141,7 @@
                             <?php endforeach; ?>
                         </select>
                         <!-- mostrar posible error -->
-                        <span class="form-text text-danger" role="alert">
+                        <span class="form-text text-danger" role="alert">   
                             <?= $this->error['id_curso'] ??= null ?>
                         </span>
                     </div>

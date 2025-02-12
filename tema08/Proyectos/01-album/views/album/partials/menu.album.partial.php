@@ -1,4 +1,4 @@
-<!-- menú principal Artículos -->
+<!-- menú principal Album -->
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
         <a class="navbar-brand" href="<?= URL ?>album">Albumes</a>
@@ -22,27 +22,18 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/1/<?= $_SESSION['csrf_token'] ?>">Id</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/2/<?= $_SESSION['csrf_token']?>">album</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/3/<?= $_SESSION['csrf_token']?>">Email</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/4/<?= $_SESSION['csrf_token']?>">Teléfono</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/5/<?= $_SESSION['csrf_token']?>">Nacionalidad</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/6/<?= $_SESSION['csrf_token']?>">DNI</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/7/<?= $_SESSION['csrf_token']?>">Curso</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/8/<?= $_SESSION['csrf_token']?>">Edad</a></li>
-                        
+                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/2/<?= $_SESSION['csrf_token']?>">Título</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/5/<?= $_SESSION['csrf_token']?>">Fecha</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>album/ordenar/5/<?= $_SESSION['csrf_token']?>">Num Fotos</a></li>
                     </ul>
                 </li>
-
             </ul>
             <form class="d-flex" role="search" action="<?= URL ?>album/filtrar" method="GET">
-                
-            <!-- protección CSRF -->
+                <!-- protección CSRF -->
                 <input type="hidden" name="csrf_token"
                         value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
-                
-                        <!-- expresión    -->
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="expresion" required>
-                
+                <!-- expresión -->
+                <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar" name="expresion" required>
                 <!-- botones de accion -->
                 <button class="btn btn-outline-primary 
                 <?= in_array($_SESSION['role_id'], $GLOBALS['album']['filtrar'])? null:'disabled' ?>" 

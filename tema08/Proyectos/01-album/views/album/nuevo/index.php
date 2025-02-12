@@ -116,6 +116,7 @@
                             <?= $this->error['categoria_id'] ??= null ?>
                         </span>
                     </div>
+                    
                     <!-- Carpeta -->
                     <div class="mb-3">
                         <label for="carpeta" class="form-label">Carpeta</label>

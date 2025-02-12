@@ -250,6 +250,8 @@ class albumModel extends Model
             $num_fotos = count(glob("images/{$album->carpeta}/*.{jpg,png,gif}", GLOB_BRACE));
             $stmt->bindParam(':num_fotos', $num_fotos, PDO::PARAM_INT);
 
+            
+            
             $stmt->bindParam(':id', $id, PDO::PARAM_INT);
             $stmt->bindParam(':titulo', $album->titulo, PDO::PARAM_STR, 100);
             $stmt->bindParam(':descripcion', $album->descripcion, PDO::PARAM_STR, 255);
@@ -362,42 +364,34 @@ class albumModel extends Model
     {
         try {
             $sql = "
-
             SELECT 
-                alumnos.id,
-                concat_ws(', ', alumnos.apellidos, alumnos.nombre) alumno,
-                alumnos.email,
-                alumnos.telefono,
-                alumnos.nacionalidad,
-                alumnos.dni,
-                timestampdiff(YEAR,  alumnos.fechaNac, NOW() ) edad,
-                cursos.nombreCorto curso
+            id,
+            titulo,
+            descripcion,
+            autor,
+            fecha,
+            lugar,
+            categoria_id,
+            num_fotos,
+            num_visitas,
+            carpeta
             FROM
-                alumnos
-            INNER JOIN
-                cursos
-            ON 
-                alumnos.id_curso = cursos.id
+            albumes
             WHERE
-
-                CONCAT_WS(  ', ', 
-                            alumnos.id,
-                            alumnos.nombre,
-                            alumnos.apellidos,
-                            alumnos.email,
-                            alumnos.telefono,
-                            alumnos.poblacion,
-                            alumnos.nacionalidad,
-                            alumnos.dni,
-                            TIMESTAMPDIFF(YEAR, alumnos.fechaNac, now()),
-                            alumnos.fechaNac,
-                            cursos.nombreCorto,
-                            cursos.nombre) 
-                like :expresion
-
+            CONCAT_WS(', ', 
+                  id,
+                  titulo,
+                  descripcion,
+                  autor,
+                  fecha,
+                  lugar,
+                  categoria_id,
+                  num_fotos,
+                  num_visitas,
+                  carpeta) 
+            LIKE :expresion
             ORDER BY 
-                alumnos.id
-            
+            id
             ";
 
             # Conectar con la base de datos
@@ -427,61 +421,49 @@ class albumModel extends Model
 
         @param: campo por el que ordenar
     */
-    public function order(int $criterio) {
-
+    public function order(string $criterio)
+    {
         try {
-
             # comando sql
             $sql = "
             SELECT 
-                alumnos.id,
-                concat_ws(', ', alumnos.apellidos, alumnos.nombre) alumno,
-                alumnos.email,
-                alumnos.telefono,
-                alumnos.nacionalidad,
-                alumnos.dni,
-                cursos.nombreCorto curso,
-                timestampdiff(YEAR,  alumnos.fechaNac, NOW() ) edad 
+                id,
+                titulo,
+                descripcion,
+                autor,
+                fecha,
+                lugar,
+                categoria_id,
+                num_fotos,
+                num_visitas,
+                carpeta
             FROM
-                alumnos
-            INNER JOIN
-                cursos
-            ON 
-                alumnos.id_curso = cursos.id
+                albumes
             ORDER BY 
-                :criterio
+                $criterio
             ";
 
             # conectamos con la base de datos
-
-            // $this->db es un objeto de la clase database
-            // ejecuto el método connect de esa clase
-
             $conexion = $this->db->connect();
 
             # ejecutamos mediante prepare
             $stmt = $conexion->prepare($sql);
 
-            $stmt->bindParam(':criterio', $criterio, PDO::PARAM_INT);
-
-            # establecemos  tipo fetch
+            # establecemos tipo fetch
             $stmt->setFetchMode(PDO::FETCH_OBJ);
 
-            #  ejecutamos 
+            # ejecutamos 
             $stmt->execute();
 
             # devuelvo objeto stmtatement
             return $stmt;
-
         } catch (PDOException $e) {
-
             // error base de datos
             require_once 'template/partials/errorDB.partial.php';
             $stmt = null;
             $conexion = null;
             $this->db = null;
             exit();
-
         }
     }
 
@@ -637,6 +619,23 @@ class albumModel extends Model
             }
 
             return FALSE;
+        } catch (PDOException $e) {
+            require_once 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+            exit();
+        }
+    }
+
+    public function update_visitas(int $id)
+    {
+        try {
+            $sql = "UPDATE albumes SET num_visitas = num_visitas + 1 WHERE id = :id";
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->execute();
         } catch (PDOException $e) {
             require_once 'template/partials/errorDB.partial.php';
             $stmt = null;

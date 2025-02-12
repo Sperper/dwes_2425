@@ -117,6 +117,20 @@
                         </span>
                     </div>
 
+                    <!-- Carpeta -->
+                    <div class="mb-3">
+                        <label for="carpeta" class="form-label">Carpeta</label>
+                        <input type="text" class="form-control
+                            <?= (isset($this->error['carpeta']))? 'is-invalid': null ?>" 
+                            id="carpeta" name="carpeta"
+                            placeholder="Introduzca carpeta" value="<?= htmlspecialchars($this->album->carpeta) ?>"
+                            readonly>
+                        <!-- mostrar posible error -->
+                        <span class="form-text text-danger" role="alert">
+                            <?= $this->error['carpeta'] ??= null ?>
+                        </span>
+                    </div>
+
                     <!-- Imágenes -->
                     <div class="mb-3">
                         <label for="imagenes" class="form-label">Imágenes</label>

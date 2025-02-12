@@ -271,8 +271,7 @@ class Album extends Controller
             exit();
         }
 
-        // var_dump($categoria_id);
-        // exit();
+        
 
         // Añadimos album a la tabla
         $this->model->create($album);
@@ -336,6 +335,7 @@ class Album extends Controller
         // obtener objeto de la clase album con el id asociado
         $this->view->album = $this->model->read($this->view->id);
 
+
         // Comrpuebo si hay errores en la validación
         if (isset($_SESSION['error'])) {
             // Creo la propiedad error en la vista
@@ -377,6 +377,8 @@ class Album extends Controller
     */
     public function update($param = [])
     {
+
+        
         // inicio o continuo la sesión
         session_start();
 
@@ -416,6 +418,10 @@ class Album extends Controller
         $fecha = filter_var($_POST['fecha'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $lugar = filter_var($_POST['lugar'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
         $categoria_id = filter_var($_POST['categoria_id'] ?? '', FILTER_SANITIZE_NUMBER_INT);
+        $carpeta = filter_var($_POST['carpeta'] ?? '', FILTER_SANITIZE_SPECIAL_CHARS);
+
+       
+
 
         // Creo un objeto de la clase album con los detalles del formulario
         $album_form = new classAlbum(
@@ -425,11 +431,13 @@ class Album extends Controller
             $autor,
             $fecha,
             $lugar,
-            $categoria_id,
+            $carpeta,
             0,
             0,
-            null
+            $categoria_id
         );
+
+        
 
         // Obtengo los detalles del álbum de la base de datos
         $album = $this->model->read($id);
@@ -498,31 +506,33 @@ class Album extends Controller
         $maxFileSize = 5 * 1024 * 1024; // 5MB
         $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
 
-        foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
-            $fileSize = $_FILES['imagenes']['size'][$key];
-            $fileType = $_FILES['imagenes']['type'][$key];
+        if (!empty($_FILES['imagenes']['tmp_name'][0])) {
+            foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
+                $fileSize = $_FILES['imagenes']['size'][$key];
+                $fileType = $_FILES['imagenes']['type'][$key];
 
-            if ($fileSize > $maxFileSize) {
-                $error[] = 'El tamaño de la imagen no debe superar los 5MB';
+                if ($fileSize > $maxFileSize) {
+                    $error[] = 'El tamaño de la imagen no debe superar los 5MB';
+                }
+
+                if (!in_array($fileType, $allowedTypes)) {
+                    $error[] = 'El tipo de archivo no es válido. Solo se permiten JPG, PNG y GIF';
+                }
             }
 
-            if (!in_array($fileType, $allowedTypes)) {
-                $error[] = 'El tipo de archivo no es válido. Solo se permiten JPG, PNG y GIF';
+            // Si hay errores
+            if (!empty($error)) {
+                $_SESSION['error'] = $error;
+                header('location:' . URL . 'album/editar/' . $id . '/' . $csrf_token);
+                exit();
             }
-        }
 
-        // Si hay errores
-        if (!empty($error)) {
-            $_SESSION['error'] = $error;
-            header('location:' . URL . 'album/editar/' . $id . '/' . $csrf_token);
-            exit();
-        }
-
-        // Guardar las imágenes
-        $carpeta = 'images/' . $album->carpeta;
-        foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
-            $fileName = basename($_FILES['imagenes']['name'][$key]);
-            move_uploaded_file($tmp_name, $carpeta . '/' . $fileName);
+            // Guardar las imágenes
+            $carpeta = 'images/' . $album->carpeta;
+            foreach ($_FILES['imagenes']['tmp_name'] as $key => $tmp_name) {
+                $fileName = basename($_FILES['imagenes']['name'][$key]);
+                move_uploaded_file($tmp_name, $carpeta . '/' . $fileName);
+            }
         }
 
         // Genero mensaje de éxito
@@ -561,10 +571,10 @@ class Album extends Controller
             exit();
         }
         // Comprobar si el usuario tiene permisos
-        else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['filtrar'])) {
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['filtrar'])) {
             // Genero mensaje error
             $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
-            header('location:' . URL . 'alumno');
+            header('location:' . URL . 'album');
             exit();
         }
 
@@ -582,24 +592,24 @@ class Album extends Controller
         }
 
         # Cargo el título
-        $this->view->title = "Filtrar por: {$expresion} - Gestión de Alumnos";
+        $this->view->title = "Filtrar por: {$expresion} - Gestión de Álbumes";
 
-        # Obtengo los alumnos que coinciden con la expresión de búsqueda
-        $this->view->alumnos = $this->model->filter($expresion);
+        # Obtengo los álbumes que coinciden con la expresión de búsqueda
+        $this->view->albumes = $this->model->filter($expresion);
 
         # Cargo la vista
-        $this->view->render('alumno/main/index');
+        $this->view->render('album/main/index');
     }
 
     /*
         Método ordenar()
 
-        Ordena los alumnos de la base de datos
+        Ordena los álbumes de la base de datos
 
-        url asociada: /alumno/ordenar/id
+        url asociada: /album/ordenar/id
 
         @param
-            :int $id: id del campo por el que se ordenarán los alumnos
+            :int $id: id del campo por el que se ordenarán los álbumes
     */
     public function ordenar($param = [])
     {
@@ -614,10 +624,10 @@ class Album extends Controller
             exit();
         }
         // Comprobar si el usuario tiene permisos
-        else if (!in_array($_SESSION['role_id'], $GLOBALS['alumno']['ordenar'])) {
+        else if (!in_array($_SESSION['role_id'], $GLOBALS['album']['ordenar'])) {
             // Genero mensaje error
             $_SESSION['mensaje_error'] = 'Acceso denegado. No tiene permisos suficientes';
-            header('location:' . URL . 'alumno');
+            header('location:' . URL . 'album');
             exit();
         }
 
@@ -637,23 +647,21 @@ class Album extends Controller
         # Criterios de ordenación
         $criterios = [
             1 => 'ID',
-            2 => 'Alumno',
-            3 => 'Email',
-            4 => 'Teléfono',
-            5 => 'Nacionalidad',
-            6 => 'DNI',
-            7 => 'Curso',
-            8 => 'Edad'
+            2 => 'Título',
+            3 => 'Artista',
+            4 => 'Género',
+            5 => 'Año',
+            6 => 'Num Fotos'
         ];
 
         # Cargo el título
-        $this->view->title = "Ordenar por {$criterios[$id]} - Gestión de Alumnos";
+        $this->view->title = "Ordenar por {$criterios[$id]} - Gestión de Álbumes";
 
-        # Obtengo los alumnos ordenados por el campo id
-        $this->view->alumnos = $this->model->order($id);
+        # Obtengo los álbumes ordenados por el campo id
+        $this->view->albumes = $this->model->order($id);
 
         # Cargo la vista
-        $this->view->render('alumno/main/index');
+        $this->view->render('album/main/index');
     }
 
     public function agregar_imagenes($param = [])
@@ -883,9 +891,14 @@ class Album extends Controller
         // Obtengo los detalles del álbum mediante el método read del modelo
         $this->view->album = $this->model->read($id);
 
+        // Obtengo las categorías del álbum
+        $this->view->categorias = $this->model->get_categorias();
+
         // Obtengo las imágenes del álbum
         $carpeta = 'images/' . $this->view->album->carpeta;
         $this->view->imagenes = array_diff(scandir($carpeta), ['.', '..']);
+
+        $this->model->update_visitas($id);
 
         // Cargo la vista
         $this->view->render('album/mostrar/index');

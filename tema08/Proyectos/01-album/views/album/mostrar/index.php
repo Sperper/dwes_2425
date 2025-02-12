@@ -30,7 +30,6 @@
                 <p><strong>Fecha:</strong> <?= htmlspecialchars($this->album->fecha) ?></p>
                 <p><strong>Lugar:</strong> <?= htmlspecialchars($this->album->lugar) ?></p>
                 <p><strong>Categoría:</strong> <?= htmlspecialchars($this->categorias[$this->album->categoria_id]) ?></p>
-                <p><strong>Etiquetas:</strong> <?= htmlspecialchars($this->album->etiquetas) ?></p>
                 <p><strong>Número de Fotos:</strong> <?= htmlspecialchars($this->album->num_fotos) ?></p>
                 <p><strong>Número de Visitas:</strong> <?= htmlspecialchars($this->album->num_visitas) ?></p>
                 <p><strong>Carpeta:</strong> <?= htmlspecialchars($this->album->carpeta) ?></p>

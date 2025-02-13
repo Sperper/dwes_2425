@@ -23,18 +23,75 @@
                 <h5 class="card-title"><?= $this->title ?></h5>
             </div>
             <div class="card-body">
-                <!-- Detalles del álbum -->
-                <p><strong>Título:</strong> <?= htmlspecialchars($this->album->titulo) ?></p>
-                <p><strong>Descripción:</strong> <?= htmlspecialchars($this->album->descripcion) ?></p>
-                <p><strong>Autor:</strong> <?= htmlspecialchars($this->album->autor) ?></p>
-                <p><strong>Fecha:</strong> <?= htmlspecialchars($this->album->fecha) ?></p>
-                <p><strong>Lugar:</strong> <?= htmlspecialchars($this->album->lugar) ?></p>
-                <p><strong>Categoría:</strong> <?= htmlspecialchars($this->categorias[$this->album->categoria_id]) ?></p>
-                <p><strong>Número de Fotos:</strong> <?= htmlspecialchars($this->album->num_fotos) ?></p>
-                <p><strong>Número de Visitas:</strong> <?= htmlspecialchars($this->album->num_visitas) ?></p>
-                <p><strong>Carpeta:</strong> <?= htmlspecialchars($this->album->carpeta) ?></p>
 
-                <!-- Imágenes del álbum -->
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">Titulo:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->titulo) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Descripcion:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->descripcion) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Autor:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->autor) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Fecha:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->fecha) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Lugar:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->lugar) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Categoría:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->categorias[$this->album->categoria_id]) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Número de Fotos:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->num_fotos) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Número de Visitas:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->num_visitas) ?></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Carpeta:</th>
+                            <td></td>
+                            <td></td>
+                            <td><?= htmlspecialchars($this->album->carpeta) ?></td>
+                        </tr>
+                    </tbody>
+                </table>
+ 
+                <h1>IMAGENES</h1>
                 <div class="row">
                     <?php foreach ($this->imagenes as $imagen): ?>
                         <div class="col-md-3">
@@ -45,18 +102,17 @@
                     <?php endforeach; ?>
                 </div>
             </div>
-            <div class="card-footer">
-                <a class="btn btn-secondary" href="<?= URL ?>album" role="button">Volver</a>
+                <div class="card-footer">
+                    <a class="btn btn-secondary" href="<?= URL ?>album" role="button">Volver</a>
+                </div>
             </div>
+            <br><br><br>
+
         </div>
-        <br><br><br>
 
-    </div>
 
-    <!-- /.container -->
-
-    <?php require_once 'template/partials/footer.partial.php' ?>
-    <?php require_once 'template/layouts/javascript.layout.php' ?>
+        <?php require_once 'template/partials/footer.partial.php' ?>
+        <?php require_once 'template/layouts/javascript.layout.php' ?>
 
 </body>
 

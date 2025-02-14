@@ -800,14 +800,19 @@ class libroModel extends Model
             foreach ($libros as $libro) {
 
                 $generos_id = implode(',', $this->get_generos_id($libro[7]));
+                $autor_id = $this->get_autor_id($libro[5]);
+                $editorial_id = $this->get_editorial_id($libro[6]);
+
+                
+                
 
                 $stmt->bindParam(':titulo', $libro[0], PDO::PARAM_STR, 30);
                 $stmt->bindParam(':precio', $libro[1], PDO::PARAM_STR, 50);
                 $stmt->bindParam(':stock', $libro[2], PDO::PARAM_INT);
                 $stmt->bindParam(':fecha_edicion', $libro[3], PDO::PARAM_STR);
                 $stmt->bindParam(':isbn', $libro[4], PDO::PARAM_STR, 13);
-                $stmt->bindParam(':autor_id', $libro[5], PDO::PARAM_INT);
-                $stmt->bindParam(':editorial_id', $libro[6], PDO::PARAM_INT);
+                $stmt->bindParam(':autor_id', $autor_id, PDO::PARAM_INT);
+                $stmt->bindParam(':editorial_id', $editorial_id, PDO::PARAM_INT);
                 $stmt->bindParam(':generos_id', $generos_id, PDO::PARAM_STR);
 
                 // añado libro
@@ -851,6 +856,62 @@ class libroModel extends Model
 
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        } catch (PDOException $e) {
+            require 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+            exit();
+        }
+    }
+
+    /*
+        método: get_autor_id
+
+        descripción: recibe el nombre del autor y devuelve su id
+
+        @param: 
+            - string $nombre_autor
+    */
+    public function get_autor_id(string $nombre_autor)
+    {
+        try {
+            $sql = "SELECT id FROM autores WHERE nombre = :nombre_autor";
+            
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':nombre_autor', $nombre_autor, PDO::PARAM_STR);
+            
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            require 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+            exit();
+        }
+    }
+
+    /*
+        método: get_editorial_id
+
+        descripción: recibe el nombre de la editorial y devuelve su id
+
+        @param: 
+            - string $nombre_editorial
+    */
+    public function get_editorial_id(string $nombre_editorial)
+    {
+        try {
+            $sql = "SELECT id FROM editoriales WHERE nombre = :nombre_editorial";
+            
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            $stmt->bindParam(':nombre_editorial', $nombre_editorial, PDO::PARAM_STR);
+            
+            $stmt->execute();
+            return $stmt->fetchColumn();
         } catch (PDOException $e) {
             require 'template/partials/errorDB.partial.php';
             $stmt = null;

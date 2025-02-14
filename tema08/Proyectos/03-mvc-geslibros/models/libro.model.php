@@ -866,6 +866,42 @@ class libroModel extends Model
     }
 
     /*
+        método: validateGenerosExist
+
+        descripción: valida que los generos que están en el csv existan en la base de datos
+
+        @param: 
+            - string $generos_nombres
+    */
+    public function validateGenerosExist(string $generos_nombres)
+    {
+        try {
+            $generos_array = explode(',', $generos_nombres);
+            $placeholders = implode(',', array_fill(0, count($generos_array), '?'));
+
+            $sql = "SELECT COUNT(*) FROM generos WHERE tema IN ($placeholders)";
+            
+            $conexion = $this->db->connect();
+            $stmt = $conexion->prepare($sql);
+            
+            foreach ($generos_array as $index => $genero) {
+                $stmt->bindValue($index + 1, trim($genero), PDO::PARAM_STR);
+            }
+
+            $stmt->execute();
+            $count = $stmt->fetchColumn();
+
+            return $count == count($generos_array);
+        } catch (PDOException $e) {
+            require 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+            exit();
+        }
+    }
+
+    /*
         método: get_autor_id
 
         descripción: recibe el nombre del autor y devuelve su id

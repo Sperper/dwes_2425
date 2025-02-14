@@ -1028,6 +1028,15 @@ class Libro extends Controller
             header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
             exit();
             }
+
+            // Validar generos id
+            foreach (explode(',', $linea[7]) as $genero) {
+                if (!$this->model->validateGenerosExist($genero)) {
+                    $_SESSION['mensaje_error'] = 'El género ' . $genero . ' no existe';
+                    header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
+                    exit();
+                }
+            }
             
         }
 

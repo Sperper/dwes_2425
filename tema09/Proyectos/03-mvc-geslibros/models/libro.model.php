@@ -957,4 +957,46 @@ class libroModel extends Model
         }
     }
 
+    /*
+        método: get_pdf()
+
+        Extrae los detalles de la tabla libros para generar un PDF
+    */
+    public function get_pdf()
+    {
+        try {
+            $sql = "SELECT 
+                        id,
+                        titulo,
+                        precio,
+                        stock,
+                        isbn
+                    FROM 
+                        libros
+                    ORDER BY
+                        id";
+
+            // conectamos con la base de datos
+            $conexion = $this->db->connect();
+
+            // ejecuto prepare
+            $stmt = $conexion->prepare($sql);
+
+            // establezco tipo fetch
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+
+            // ejecutamos
+            $stmt->execute();
+
+            // devuelvo los resultados en un array
+            return $stmt->fetchAll();
+        } catch (PDOException $e) {
+            // error base de datos
+            require 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+        }
+    }
+
 }

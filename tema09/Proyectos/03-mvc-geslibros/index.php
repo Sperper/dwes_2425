@@ -8,6 +8,7 @@ require_once 'libs/view.php';
 require_once 'libs/app.php';
 require_once 'config/config.php';
 require_once 'config/privileges.php';
+require_once 'class/PDF_libros.php';
 require_once 'class/libro.class.php';
 $app = new App();
 

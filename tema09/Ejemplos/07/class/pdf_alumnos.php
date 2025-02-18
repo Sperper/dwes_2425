@@ -1,21 +1,17 @@
 <?php
-require ('fpdf/fpdf.php');
 
-
-class PDF_Libros extends FPDF {
-    // ...existing code...
-
-
+class Pdf_alumnos extends FPDF
+{
     public function Header()
     {
         // Select courier normal tamaño 9
         $this->SetFont('Courier', '', 9);
 
         // Imprimir logo empresa
-        $this->image('images/logoTabla.jpEg', 10, 5, 20);
+        $this->image('images/logo_empresa.jpg', 10, 5, 20);
 
         // Celda
-        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Lista de Libros - 2DAW - Curso 24/25'), 'B', 1, 'C');
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Lista de Alumnos - 2DAW - Curso 24/25'), 'B', 1, 'C');
 
         // Line break
         $this->Ln(10);
@@ -37,7 +33,10 @@ class PDF_Libros extends FPDF {
         $this->SetFillColor(200, 220, 255);
 
         // Escribimos el título
-        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Listado de libros'), 0, 1, 'C', 1);
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Listado de alumnos'), 0, 1, 'C', 1);
+
+        // Imprimir imagen
+        $this->image('images/coche_chino.jpeg', 65, 43, 60);
 
         // Dejar un espacio de 2 líneas
         $this->Ln(43);
@@ -50,13 +49,9 @@ class PDF_Libros extends FPDF {
 
         // Escribimos los nombres de las columnas
         $this->Cell(10, 10, iconv('UTF-8', 'ISO-8859-1', '#'), 1, 0, 'C', 1);
-        $this->Cell(60, 10, iconv('UTF-8', 'ISO-8859-1', 'Titulo'), 1, 0, 'L', 1);
-        $this->Cell(30, 10, iconv('UTF-8', 'ISO-8859-1', 'Precio'), 1, 0, 'L', 1);
-        $this->Cell(30, 10, iconv('UTF-8', 'ISO-8859-1', 'Stock'), 1, 0, 'L', 1);
-        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'ISBN'), 1, 1, 'L', 1);
+        $this->Cell(60, 10, iconv('UTF-8', 'ISO-8859-1', 'Nombre'), 1, 0, 'L', 1);
+        $this->Cell(80, 10, iconv('UTF-8', 'ISO-8859-1', 'Apellidos'), 1, 0, 'L', 1);
+        $this->Cell(20, 10, iconv('UTF-8', 'ISO-8859-1', 'Curso'), 1, 0, 'L', 1);
+        $this->Cell(20, 10, iconv('UTF-8', 'ISO-8859-1', 'Edad'), 1, 1, 'R', 1);
     }
-
-    // ...existing code...
 }
-
-

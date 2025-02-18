@@ -176,7 +176,7 @@ class Libro extends Controller
         // Validar token
         $this->checkTokenCsrf($param[0]);
 
-        
+
 
         // Creo un objeto vacío de la clase libro
         $this->view->libro = new classLibro();
@@ -236,7 +236,7 @@ class Libro extends Controller
         // Comprobar si hay un usuario logueado
         $this->checkLogin();
 
-        
+
 
         // Recogemos los detalles del formulario
         // Prevenir ataques XSS
@@ -463,7 +463,7 @@ class Libro extends Controller
         // Comprobar si hay un usuario logueado
         $this->checkLogin();
 
-        
+
 
         # Cargo id del libro
         $id = htmlspecialchars($param[0]);
@@ -471,7 +471,7 @@ class Libro extends Controller
         # Obtetngo el token CSRF
         $csrf_token = $param[1];
 
-        
+
 
         // Validación CSRF
         if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
@@ -686,7 +686,6 @@ class Libro extends Controller
         $_SESSION['mensaje'] = 'Libro eliminado con éxito';
 
         header('location:' . URL . 'libro');
-        
     }
 
     /*
@@ -709,7 +708,7 @@ class Libro extends Controller
 
         // Comprobar si el usuario tiene permisos
         $this->checkPermissions($GLOBALS['libro']['mostrar']);
-        
+
         $this->checkTokenCsrf($param[1]);
 
         # Cargo id del libro
@@ -785,7 +784,7 @@ class Libro extends Controller
         // obtengo el token CSRF
         $csrf_token = htmlspecialchars($_GET['csrf_token']);
 
-        
+
 
 
         # Cargo el título
@@ -831,7 +830,7 @@ class Libro extends Controller
         // Obtenerr csrf_token
         $csrf_token = $param[1];
 
-       
+
         # Criterios de ordenación
         $criterios = [
             1 => 'Id',
@@ -917,7 +916,7 @@ class Libro extends Controller
         exit;
     }
 
-     /*
+    /*
         Método importar()
 
         Permite importar los libros desde un archivo CSV
@@ -1010,23 +1009,23 @@ class Libro extends Controller
 
             // Validar ISBN
             if (!$this->model->validateUniqueISBN($linea[4])) {
-            $_SESSION['mensaje_error'] = 'El ISBN ' . $linea[4] . ' ya existe';
-            header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
-            exit();
+                $_SESSION['mensaje_error'] = 'El ISBN ' . $linea[4] . ' ya existe';
+                header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
+                exit();
             }
 
             // Validar id_autor
             if (!$this->model->validateForeignKeyAutor($linea[5])) {
-            $_SESSION['mensaje_error'] = 'El autor ' . $linea[5] . ' no existe';
-            header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
-            exit();
+                $_SESSION['mensaje_error'] = 'El autor ' . $linea[5] . ' no existe';
+                header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
+                exit();
             }
 
             // Validar id_editorial
             if (!$this->model->validateForeignKeyEditorial($linea[6])) {
-            $_SESSION['mensaje_error'] = 'La editorial ' . $linea[6] . ' no existe';
-            header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
-            exit();
+                $_SESSION['mensaje_error'] = 'La editorial ' . $linea[6] . ' no existe';
+                header('location:' . URL . 'libro/importar/csv/' . $_POST['csrf_token']);
+                exit();
             }
 
             // Validar generos id
@@ -1037,7 +1036,6 @@ class Libro extends Controller
                     exit();
                 }
             }
-            
         }
 
         // Cerrar el archivo
@@ -1049,7 +1047,7 @@ class Libro extends Controller
         // Genero mensaje de éxito
         $_SESSION['mensaje'] = $count . ' libros importados con éxito';
 
-        
+
         // redireciona al main de libro
         header('location:' . URL . 'libro');
         exit();
@@ -1062,10 +1060,58 @@ class Libro extends Controller
 
         url asociada: /libro/pdf
     */
-    public function pdf()
+    public function pdf($param = [])
     {
         // inicio o continuo la sesión
-        
-    }
+        session_start();
 
+        // Validar token
+        $this->checkTokenCsrf($param[0]);
+
+        // Comprobar si hay un usuario logueado
+        $this->checkLogin();
+
+        // Comprobar si el usuario tiene permisos
+        $this->checkPermissions($GLOBALS['libro']['pdf']);
+
+
+
+        // Creo objeto pdf_alumnos
+        $pdf = new PDF_Libros('P', 'mm', 'A4');
+
+        // Obtengo los libros
+        $libros = $this->model->get_pdf();
+
+        // Imprimir número página actual
+        $pdf->AliasNbPages();
+
+        // Añadimos una página
+        $pdf->AddPage();
+
+        // Añado el título
+        $pdf->titulo();
+
+        // Cabecera del listado
+        $pdf->cabecera();
+
+        // Cuerpo listado
+        $pdf->SetFont('Courier', '', 10);
+        // Fondo pautado para las líneas pares
+        $pdf->SetFillColor(205, 205, 205);
+
+        $fondo = false;
+        // Escribimos los datos de los libros
+        foreach ($libros as $libro) {
+            $pdf->Cell(10, 8, mb_convert_encoding($libro['id'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'C', $fondo);
+            $pdf->Cell(60, 8, mb_convert_encoding($libro['titulo'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
+            $pdf->Cell(30, 8, mb_convert_encoding($libro['precio'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'R', $fondo);
+            $pdf->Cell(30, 8, mb_convert_encoding($libro['stock'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'R', $fondo);
+            $pdf->Cell(50, 8, mb_convert_encoding($libro['isbn'], 'ISO-8859-1', 'UTF-8'), 1, 1, 'C', $fondo);
+            $fondo = !$fondo;
+        }
+
+
+        // Cerramos pdf
+        $pdf->Output('I', 'listado_alumnos.pdf', true);
+    }
 }

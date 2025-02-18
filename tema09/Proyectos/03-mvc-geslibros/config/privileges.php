@@ -38,3 +38,4 @@
     $GLOBALS['libro']['ordenar'] = [1, 2, 3];
     $GLOBALS['libro']['exportar'] = [1];
     $GLOBALS['libro']['importar'] = [1];
+    $GLOBALS['libro']['pdf'] = [1, 2];

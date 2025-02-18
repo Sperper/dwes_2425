@@ -26,7 +26,7 @@
                 <li class="nav-item">
                     <a class="nav-link 
                     <?= in_array($_SESSION['role_id'], $GLOBALS['libro']['pdf'])? 'active':'disabled' ?>" 
-                    href="<?= URL ?>libro/importar/csv/<?= $_SESSION['csrf_token'] ?>" title="Importar CSV">Importar</a>
+                    href="<?= URL ?>libro/pdf/<?= $_SESSION['csrf_token'] ?>" title="Exportar PDF">PDF</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle

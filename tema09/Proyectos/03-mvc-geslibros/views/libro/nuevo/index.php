@@ -8,7 +8,7 @@
 
 <body>
     <!-- Menú fijo superior -->
-    <?php require_once 'template/partials/menu.partial.php' ?>
+    <?php require_once 'template/partials/menu.auth.partial.php' ?>
 
     <!-- Capa Principal -->
     <div class="container">
@@ -161,7 +161,7 @@
             </div>
             <div class="card-footer">
                 <!-- botones de acción -->
-                <a class="btn btn-secondary" href="<?= URL ?>alumno" role="button">Cancelar</a>
+                <a class="btn btn-secondary" href="<?= URL ?>libro" role="button">Cancelar</a>
                 <button type="reset" class="btn btn-danger">Borrar</button>
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </div>

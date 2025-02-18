@@ -8,7 +8,7 @@
 
 <body>
     <!-- Menú fijo superior -->
-    <?php require_once 'template/partials/menu.partial.php' ?>
+    <?php require_once 'template/partials/menu.auth.partial.php' ?>
 
     <!-- Capa Principal -->
     <div class="container">
@@ -25,7 +25,7 @@
             </div>
             <div class="card-body">
                 <!-- Formulario de alumnos  -->
-                <form action="<?= URL ?>libro/update/<?= $this->id ?>/<?= $this->csrf_token?>" method="POST">
+                <form action="<?= URL ?>libro/update/<?= $this->id ?>/<?= $this->csrf_token ?>" method="POST">
 
                     <!-- id oculto -->
                     <input type="number" class="form-control" name="id" value="<?= $this->libro->id ?>" hidden>
@@ -59,7 +59,7 @@
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
                             <?= $this->error['precio'] ??= null ?>
-                        </span>                         
+                        </span>
                     </div>
 
                     <!-- Stock -->
@@ -67,9 +67,9 @@
                         <label for="Precio" class="form-label">Stock</label>
                         <input type="number" class="form-control 
                         <?= (isset($this->error['stock'])) ? 'is-invalid' : null ?>"
-                        id="stock" name="stock"
-                        placeholder="Introduzca stock" value="<?= htmlspecialchars($this->libro->stock) ?>"
-                        required>
+                            id="stock" name="stock"
+                            placeholder="Introduzca stock" value="<?= htmlspecialchars($this->libro->stock) ?>"
+                            required>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
                             <?= $this->error['stock'] ??= null ?>
@@ -82,7 +82,7 @@
                         <input type="date" class="form-control 
                             <?= (isset($this->error['fecha_edicion'])) ? 'is-invalid' : null ?>"
                             id="fecha_edicion" name="fecha_edicion"
-                            value="<?= htmlspecialchars($this->libro->fecha_edicion) ?>" 
+                            value="<?= htmlspecialchars($this->libro->fecha_edicion) ?>"
                             required>
                         <!-- mostrar posible error -->
                         <span class="form-text text-danger" role="alert">
@@ -108,8 +108,8 @@
                     <div class="mb-3">
                         <label for="curso" class="form-label">Editoriales</label>
                         <select class="form-select
-                        <?= (isset($this->error['id_editorial'])) ? 'is-invalid' : null ?>" 
-                        id="id_editorial" name="id_editorial" required>
+                        <?= (isset($this->error['id_editorial'])) ? 'is-invalid' : null ?>"
+                            id="id_editorial" name="id_editorial" required>
                             <option selected disabled>Seleccione editoriales</option>
                             <!-- mostrar lista editoriales -->
                             <?php foreach ($this->editoriales as $indice => $data): ?>
@@ -128,9 +128,9 @@
                     <div class="mb-3">
                         <label for="curso" class="form-label">Autor</label>
                         <select class="form-select
-                        <?= (isset($this->error['id_autor'])) ? 'is-invalid' : null ?>" 
-                        id="id_autor" name="id_autor" required>
-                            <option selected disabled>Seleccione autor</option>
+                        <?= (isset($this->error['id_autor'])) ? 'is-invalid' : null ?>"
+                            id="id_autor" name="id_autor" required>
+                            <option selected disabled   >Seleccione autor</option>
                             <!-- mostrar lista cucrsos -->
                             <?php foreach ($this->autores as $indice => $data): ?>
                                 <option value="<?= $indice ?>" <?= $this->libro->autor_id == $indice ? 'selected' : '' ?>>
@@ -160,11 +160,12 @@
                             <?php endforeach; ?>
                         </div>
                     </div>
+                    
 
             </div>
             <div class="card-footer">
                 <!-- botones de acción -->
-                <a class="btn btn-secondary" href="<?= URL ?>alumno" role="button"
+                <a class="btn btn-secondary" href="<?= URL ?>libro" role="button"
                     onclick="return confirm('¿Estás seguro de que deseas cancelar? Se perderán los datos ingresados.')">Cancelar</a>
                 <button type="reset" class="btn btn-danger">Borrar</button>
                 <button type="submit" class="btn btn-primary">Enviar</button>

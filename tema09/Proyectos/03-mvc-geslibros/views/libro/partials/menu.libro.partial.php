@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link 
+                    <a class="nav-link  
                     <?= in_array($_SESSION['role_id'], $GLOBALS['libro']['nuevo']) ? 'active' : 'disabled' ?>"
                         aria-current="page" href="<?= URL ?>libro/nuevo/<?= $_SESSION['csrf_token'] ?>">Nuevo</a>
                 </li>

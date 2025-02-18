@@ -261,7 +261,7 @@ class Libro extends Controller
             $isbn,
             $id_autor,
             $id_editorial,
-            implode(',', $id_generos)
+            implode(',', $id_generos),
         );
 
         // Validación de los datos
@@ -304,7 +304,7 @@ class Libro extends Controller
         // Formato: 3-598-21508-8
         $options = [
             'options' => [
-                'regexp' => '/^\d{1,5}-\d{1,7}-\d{1,6}-\d{1,1}$/'
+                'regexp' => '/^\d{13}$/'
             ]
         ];
 
@@ -350,7 +350,7 @@ class Libro extends Controller
             $_SESSION['libro'] = $libro;
 
             // Redirecciono al formulario de nuevo
-            header('location:' . URL . 'libro/nuevo');
+            header('location:' . URL . 'libro/nuevo/' . $_SESSION['csrf_token']);
 
             // Salgo del script
             exit;
@@ -468,18 +468,6 @@ class Libro extends Controller
         # Cargo id del libro
         $id = htmlspecialchars($param[0]);
 
-        # Obtetngo el token CSRF
-        $csrf_token = $param[1];
-
-
-
-        // Validación CSRF
-        if (!hash_equals($_SESSION['csrf_token'], $csrf_token)) {
-            require_once 'controllers/error.php';
-            $controller = new Errores();
-            exit();
-        }
-
         // Recogemos los detalles del formulario
         $titulo = filter_var($_POST['titulo'], FILTER_SANITIZE_SPECIAL_CHARS);
         $precio = filter_var($_POST['precio'], FILTER_SANITIZE_NUMBER_FLOAT);
@@ -556,7 +544,7 @@ class Libro extends Controller
             // 8 números seguidos de una letra
             $options = [
                 'options' => [
-                    'rexexp' => '/^\d{1,5}-\d{1,7}-\d{1,6}-\d{1,1}$/'
+                    'regexp' => '/^\d{13}$/'
                 ]
             ];
 
@@ -629,7 +617,7 @@ class Libro extends Controller
         $this->model->update($libro_form, $id);
 
         // Genero mensaje de éxito
-        $_SESSION['mensaje'] = 'libro actualizado con éxito';
+        $_SESSION['mensaje'] = 'Libro actualizado con éxito';
 
         # Cargo el controlador principal de libro
         header('location:' . URL . 'libro');

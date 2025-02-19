@@ -45,15 +45,15 @@ class PDF_Libros extends FPDF {
 
     public function cabecera()
     {
-        // sobreado de fondo para el encabezado
-        $this->SetFillColor(240, 120, 10);
+        // sombreado de fondo para el encabezado
+        $this->SetFillColor(200, 220, 255);
 
-        // Escribimos los nombres de las columnas
+        // Escribimos los nombres de las columnas con márgenes ajustados
         $this->Cell(10, 10, iconv('UTF-8', 'ISO-8859-1', '#'), 1, 0, 'C', 1);
-        $this->Cell(60, 10, iconv('UTF-8', 'ISO-8859-1', 'Titulo'), 1, 0, 'L', 1);
-        $this->Cell(30, 10, iconv('UTF-8', 'ISO-8859-1', 'Precio'), 1, 0, 'L', 1);
-        $this->Cell(30, 10, iconv('UTF-8', 'ISO-8859-1', 'Stock'), 1, 0, 'L', 1);
-        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'ISBN'), 1, 1, 'L', 1);
+        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'Titulo'), 1, 0, 'C', 1);
+        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'Autor'), 1, 0, 'C', 1);
+        $this->Cell(55, 10, iconv('UTF-8', 'ISO-8859-1', 'Editorial'), 1, 0, 'C', 1);
+        $this->Cell(20, 10, iconv('UTF-8', 'ISO-8859-1', 'Precio'), 1, 1, 'C', 1);
     }
 
     // ...existing code...

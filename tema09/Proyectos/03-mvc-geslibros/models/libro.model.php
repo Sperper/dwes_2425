@@ -579,7 +579,8 @@ class libroModel extends Model
     */
 
 
-    public function validateIdLibro(int $id) {
+    public function validateIdLibro(int $id)
+    {
 
         try {
 
@@ -599,11 +600,9 @@ class libroModel extends Model
 
             if ($stmt->rowCount() == 1) {
                 return TRUE;
-            } 
+            }
 
             return FALSE;
-            
-
         } catch (PDOException $e) {
 
             // error base de datos
@@ -623,7 +622,8 @@ class libroModel extends Model
         @param: 
             - isbn del libro
     */
-    public function validateUniqueISBN(string $isbn) {
+    public function validateUniqueISBN(string $isbn)
+    {
         try {
             $sql = "SELECT id FROM libros WHERE isbn = :isbn";
             $conexion = $this->db->connect();
@@ -649,7 +649,8 @@ class libroModel extends Model
         @param: 
             - id del autor
     */
-    public function validateForeignKeyAutor(string $nombre_autor) {
+    public function validateForeignKeyAutor(string $nombre_autor)
+    {
         try {
             $sql = "SELECT id FROM autores WHERE nombre = :nombre_autor";
             $conexion = $this->db->connect();
@@ -675,7 +676,8 @@ class libroModel extends Model
         @param: 
             - nombre de la editorial
     */
-    public function validateForeignKeyEditorial(string $nombre_editorial) {
+    public function validateForeignKeyEditorial(string $nombre_editorial)
+    {
         try {
             $sql = "SELECT id FROM editoriales WHERE nombre = :nombre_editorial";
             $conexion = $this->db->connect();
@@ -767,7 +769,8 @@ class libroModel extends Model
             - $libros array con los datos del fichero csv
 
     */
-    public function import($libros) {
+    public function import($libros)
+    {
 
         try {
 
@@ -803,8 +806,8 @@ class libroModel extends Model
                 $autor_id = $this->get_autor_id($libro[5]);
                 $editorial_id = $this->get_editorial_id($libro[6]);
 
-                
-                
+
+
 
                 $stmt->bindParam(':titulo', $libro[0], PDO::PARAM_STR, 30);
                 $stmt->bindParam(':precio', $libro[1], PDO::PARAM_STR, 50);
@@ -821,7 +824,6 @@ class libroModel extends Model
 
             // devuelvo el número de libros importados
             return count($libros);
-
         } catch (PDOException $e) {
             // error base de datos
             require_once 'template/partials/errorDB.partial.php';
@@ -846,10 +848,10 @@ class libroModel extends Model
             $placeholders = implode(',', array_fill(0, count($generos_array), '?'));
 
             $sql = "SELECT id FROM generos WHERE tema IN ($placeholders)";
-            
+
             $conexion = $this->db->connect();
             $stmt = $conexion->prepare($sql);
-            
+
             foreach ($generos_array as $index => $genero) {
                 $stmt->bindValue($index + 1, trim($genero), PDO::PARAM_STR);
             }
@@ -880,10 +882,10 @@ class libroModel extends Model
             $placeholders = implode(',', array_fill(0, count($generos_array), '?'));
 
             $sql = "SELECT COUNT(*) FROM generos WHERE tema IN ($placeholders)";
-            
+
             $conexion = $this->db->connect();
             $stmt = $conexion->prepare($sql);
-            
+
             foreach ($generos_array as $index => $genero) {
                 $stmt->bindValue($index + 1, trim($genero), PDO::PARAM_STR);
             }
@@ -913,11 +915,11 @@ class libroModel extends Model
     {
         try {
             $sql = "SELECT id FROM autores WHERE nombre = :nombre_autor";
-            
+
             $conexion = $this->db->connect();
             $stmt = $conexion->prepare($sql);
             $stmt->bindParam(':nombre_autor', $nombre_autor, PDO::PARAM_STR);
-            
+
             $stmt->execute();
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
@@ -941,11 +943,11 @@ class libroModel extends Model
     {
         try {
             $sql = "SELECT id FROM editoriales WHERE nombre = :nombre_editorial";
-            
+
             $conexion = $this->db->connect();
             $stmt = $conexion->prepare($sql);
             $stmt->bindParam(':nombre_editorial', $nombre_editorial, PDO::PARAM_STR);
-            
+
             $stmt->execute();
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
@@ -966,15 +968,24 @@ class libroModel extends Model
     {
         try {
             $sql = "SELECT 
-                        id,
-                        titulo,
-                        precio,
-                        stock,
-                        isbn
+                        libros.id,
+                        libros.titulo,
+                        autores.nombre AS autor,
+                        editoriales.nombre AS editorial,
+                        libros.stock,
+                        libros.precio
                     FROM 
-                        libros
+                        libros 
+                    INNER JOIN
+                        autores
+                    ON 
+                        libros.autor_id = autores.id
+                    INNER JOIN
+                        editoriales
+                    ON
+                        libros.editorial_id = editoriales.id
                     ORDER BY
-                        id";
+                        libros.id";
 
             // conectamos con la base de datos
             $conexion = $this->db->connect();
@@ -998,5 +1009,4 @@ class libroModel extends Model
             $this->db = null;
         }
     }
-
 }

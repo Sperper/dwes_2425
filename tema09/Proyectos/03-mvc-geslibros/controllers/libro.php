@@ -1083,23 +1083,24 @@ class Libro extends Controller
         $pdf->cabecera();
 
         // Cuerpo listado
-        $pdf->SetFont('Courier', '', 10);
+        $pdf->SetFont('Courier', '', 8);
         // Fondo pautado para las líneas pares
         $pdf->SetFillColor(205, 205, 205);
 
         $fondo = false;
         // Escribimos los datos de los libros
         foreach ($libros as $libro) {
-            $pdf->Cell(10, 8, mb_convert_encoding($libro['id'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'C', $fondo);
-            $pdf->Cell(60, 8, mb_convert_encoding($libro['titulo'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
-            $pdf->Cell(30, 8, mb_convert_encoding($libro['precio'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'R', $fondo);
-            $pdf->Cell(30, 8, mb_convert_encoding($libro['stock'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'R', $fondo);
-            $pdf->Cell(50, 8, mb_convert_encoding($libro['isbn'], 'ISO-8859-1', 'UTF-8'), 1, 1, 'C', $fondo);
+            $pdf->Cell(10, 10, mb_convert_encoding($libro['id'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'C', $fondo);
+            $pdf->Cell(50, 10, mb_convert_encoding($libro['titulo'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
+            $pdf->Cell(50, 10, mb_convert_encoding($libro['autor'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
+            $pdf->Cell(55, 10, mb_convert_encoding($libro['editorial'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
+            $pdf->Cell(20, 10, mb_convert_encoding($libro['precio'], 'ISO-8859-1', 'UTF-8'), 1, 1, 'R', $fondo);
+
             $fondo = !$fondo;
         }
 
 
         // Cerramos pdf
-        $pdf->Output('I', 'listado_alumnos.pdf', true);
+        $pdf->Output('I', 'listado_libros.pdf', true);
     }
 }

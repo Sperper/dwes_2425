@@ -357,6 +357,9 @@ class Auth extends Controller
 
     }
 
+   /*
+        Envía un email
+    */
     function enviarEmail($name, $email, $subject, $message)
     {
         // Configuración de la cuenta de correo
@@ -386,8 +389,8 @@ class Auth extends Controller
             $mail->SMTPSecure = 'tls';
 
             // Configurar el email
-            $mail->setFrom($email, $name);
-            $mail->addAddress(SMTP_USER);
+            $mail->setFrom('servidor5438@gmail.com', $name);
+            $mail->addAddress($email);
             $mail->Subject = $subject;
             $mail->Body = $message;
 

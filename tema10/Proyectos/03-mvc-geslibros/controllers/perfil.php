@@ -205,6 +205,7 @@ class Perfil extends Controller
             }
         }
 
+
         // Si hay errores
         if (!empty($error)) {
             // Creo la variable de sesión error
@@ -223,6 +224,16 @@ class Perfil extends Controller
 
         // Actualizo los datos del usuario
         $this->model->update($name, $email, $_SESSION['user_id']);
+
+        // Si se ha modificado el email, enviar email al usuario
+        if ($email != $user->email) {
+            $cuerpo_mensaje = "Su email ha sido actualizado correctamente\n";
+            $cuerpo_mensaje .= "Nuevo email: $email\n";
+            $cuerpo_mensaje .= "Si ha sido usted, ignore este mensaje\n";
+            $cuerpo_mensaje .= "Si no ha sido usted, contacte con el administrador\n";
+            $cuerpo_mensaje .= "Fecha: " . date('d-m-Y H:i:s') . "\n";
+            $this->enviarEmail($name, $email, 'Email actualizado', $cuerpo_mensaje);
+        }
 
         // Actualizo el posible nuevo nombre del usuario
         $_SESSION['user_name'] = $name;
@@ -370,6 +381,15 @@ class Perfil extends Controller
         // Actualizo password del usuario
         $this->model->updatePass($new_password, $_SESSION['user_id']);
 
+        // Enviar email al usuario
+        $cuerpo_mensaje = "Su contraseña ha sido actualizada correctamente\n";
+        $cuerpo_mensaje .= "Nueva contraseña: $new_password\n";
+        $cuerpo_mensaje .= "Si ha sido usted, ignore este mensaje\n";
+        $cuerpo_mensaje .= "Si no ha sido usted, contacte con el administrador\n";
+        $cuerpo_mensaje .= "Fecha: " . date('d-m-Y H:i:s') . "\n";
+        $this->enviarEmail($user->name, $user->email, 'Contraseña actualizada', $cuerpo_mensaje);
+        
+
         // Genero mensaje de éxito
         $_SESSION['mensaje'] = 'Contraseña actualizada correctamente';
 
@@ -413,8 +433,20 @@ class Perfil extends Controller
             exit();
         }
 
+        // Obtengo los detalles del usuario
+        $user = $this->model->getUserId($_SESSION['user_id']);
+        
         // Elimino el usuario
         $this->model->delete($_SESSION['user_id']);
+
+       
+
+        // Envío email al usuario
+        $cuerpo_mensaje = "Su cuenta ha sido eliminada correctamente\n";
+        $cuerpo_mensaje .= "Si ha sido usted, ignore este mensaje\n";
+        $cuerpo_mensaje .= "Si no ha sido usted, contacte con el administrador\n";
+        $cuerpo_mensaje .= "Fecha: " . date('d-m-Y H:i:s') . "\n";
+        $this->enviarEmail($user->name, $user->email, 'Cuenta eliminada', $cuerpo_mensaje);
 
         // Cierro la sesión
         session_destroy();
@@ -430,5 +462,55 @@ class Perfil extends Controller
 
         // Redirecciono a la vista principal de perfil
         header('location:' . URL . 'auth/login');
+
     }
+
+    /*
+        Envía un email
+    */
+    function enviarEmail($name, $email, $subject, $message)
+    {
+        // Configuración de la cuenta de correo
+        require_once 'config/smtp_gmail.php';
+
+        // Cargar la librería PHPMailer
+        require_once 'extensions/PHPMailer/src/PHPMailer.php';
+        require_once 'extensions/PHPMailer/src/SMTP.php';
+        require_once 'extensions/PHPMailer/src/Exception.php';
+
+        // Crear una nueva instancia de PHPMailer
+        $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+
+        try {
+
+            // Configuración juego caracteres
+            $mail->CharSet = "UTF-8";
+            $mail->Encoding = "quoted-printable";
+
+            // Servidor SMTP
+            $mail->isSMTP();
+            $mail->Host = SMTP_HOST;
+            $mail->SMTPAuth = true;
+            $mail->Username = SMTP_USER;
+            $mail->Password = SMTP_PASS;
+            $mail->Port = SMTP_PORT;
+            $mail->SMTPSecure = 'tls';
+
+            // Configurar el email
+            $mail->setFrom('servidor5438@gmail.com', $name);
+            $mail->addAddress($email);
+            $mail->Subject = $subject;
+            $mail->Body = $message;
+
+            // Configurar el email
+            $mail->send();
+
+        } catch (Exception $e) {
+            $this->view->mensaje_error = "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+            $this->view->render('contactar/confirm/index');
+            exit();
+        }
+
+    }
+
 }

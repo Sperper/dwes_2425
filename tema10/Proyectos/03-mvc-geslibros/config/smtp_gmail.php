@@ -11,7 +11,7 @@
     define('SMTP_PORT', 587);
 
     // Usuario smtp brevo
-    define('SMTP_USER', 'nerom24@gmail.com');
+    define('SMTP_USER', 'servidor5438@gmail.com');
 
     // Contraseña smtp brevo
-    define('SMTP_PASS', '****************');
+    define('SMTP_PASS', 'abgv fbwt nthn wkni');

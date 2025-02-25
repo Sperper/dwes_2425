@@ -121,7 +121,7 @@ class Contactar extends Controller
         $cuerpo_mensaje .= "Mensaje: $message\n";
 
         // Si no hay errores, envío el email
-        $this->enviarEmail($name, $email, $subject, $cuerpo_mensaje);
+        $this->enviarEmail($name,  $email, $subject, $cuerpo_mensaje);
 
         // Muestro la vista de confirmación
         $this->view->mensaje = 'Mensaje enviado correctamente';
@@ -172,7 +172,7 @@ class Contactar extends Controller
 
             // Configurar el email
             $mail->setFrom($email, $name);
-            $mail->addAddress(SMTP_USER);
+            $mail->addAddress('samuelperezperez2004@gmail.com');
             $mail->Subject = $subject;
             $mail->Body = $message;
 

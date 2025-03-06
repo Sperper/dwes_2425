@@ -29,6 +29,8 @@
         Se asignan los perfiles que tienen acceso a un determinado método del controlador libro.
 
     */ 
+
+    // Definimos los privilegios del controlador libro
     $GLOBALS['libro']['main'] = [1, 2, 3];
     $GLOBALS['libro']['nuevo'] = [1, 2];
     $GLOBALS['libro']['editar'] = [1, 2];
@@ -39,3 +41,15 @@
     $GLOBALS['libro']['exportar'] = [1];
     $GLOBALS['libro']['importar'] = [1];
     $GLOBALS['libro']['pdf'] = [1, 2];
+
+    // Definimos los privilegios del controlador autor
+    $GLOBALS['autor']['main'] = [1, 2, 3];
+    $GLOBALS['autor']['nuevo'] = [1, 2];
+    $GLOBALS['autor']['editar'] = [1, 2];
+    $GLOBALS['autor']['eliminar'] = [1];
+    $GLOBALS['autor']['mostrar'] = [1, 2, 3];
+    $GLOBALS['autor']['filtrar'] = [1, 2, 3];
+    $GLOBALS['autor']['ordenar'] = [1, 2, 3];
+    $GLOBALS['autor']['exportar'] = [1];
+    $GLOBALS['autor']['importar'] = [1];
+    $GLOBALS['autor']['pdf'] = [1, 2];

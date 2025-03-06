@@ -111,4 +111,53 @@ class autorModel extends Model {
             $this->db = null;
         }
     }
+
+    /*
+        método: read
+
+        descripción: obtiene los detalles de un alumno
+        parámetros: id del alumno
+        devuelve: objeto con los detalles del alumno
+        
+    */
+
+    public function read(int $id)
+    {
+
+        try {
+            $sql = "
+                SELECT 
+                    id,
+                    nombre,
+                    nacionalidad,
+                    email,
+                    DATE(fecha_nac) AS fecha_nac,
+                    DATE(fecha_def) AS fecha_def,
+                    premios
+                FROM 
+                    autores
+                WHERE
+                    id = :id
+                LIMIT 1
+            ";
+
+            # Conectar con la base de datos
+            $conexion = $this->db->connect();
+
+            $stmt = $conexion->prepare($sql);
+
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            $stmt->setFetchMode(PDO::FETCH_OBJ);
+            $stmt->execute();
+
+            return $stmt->fetch();
+        } catch (PDOException $e) {
+            // error base de datos
+            require_once 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+            exit();
+        }
+    }
 }

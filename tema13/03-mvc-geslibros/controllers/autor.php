@@ -290,4 +290,75 @@ class Autor extends Controller
         header('location:' . URL . 'autor');
      exit();
     }
+
+    /*
+        Método editar()
+
+        Muestra el formulario que permite editar los detalles de un autor
+
+        url asociada: /autor/editar/id
+
+        @param int $id: id del autor a editar
+
+    */
+    public function editar($param = [])
+    {
+
+        # obtengo el id del autor que voy a editar
+        // autor/edit/4
+        // -- autor es el nombre del controlador
+        // -- edit es el nombre del método
+        // -- $param es un array porque puedo pasar varios parámetros a un método
+
+        session_start();
+
+        // Comprobar si hay un usuario logueado
+        $this->checkLogin();
+
+        // Comprobar si el usuario tiene permisos
+        $this->checkPermissions($GLOBALS['autor']['editar']);
+
+        // Validar token
+        $this->checkTokenCsrf($param[1]);
+
+        $this->view->id = htmlspecialchars($param[0]);
+
+        # obtener objeto de la clase autor con el id asociado
+        $this->view->autor = $this->model->read($this->view->id);
+
+        // Compruebo si hay errores de validación
+        if (isset($_SESSION['error'])) {
+
+            // Creo la propiedad error de la vista
+            $this->view->error = $_SESSION['error'];
+
+            // Creo la propiedad autor de la vista
+            $this->view->autor = $_SESSION['autor'];
+
+            // Creo la propiedad mensaje de error
+            $this->view->mensaje = 'Error en el formulario';
+
+            // Elimino la variable de sesión autor
+            unset($_SESSION['autor']);
+
+            // Elimino la variable de sesión error
+            unset($_SESSION['error']);
+        }
+
+        # title
+        $this->view->title = "Formulario Editar - Gestión de Autores";
+
+        # obtener objeto de la clase autor con el id pasado
+        // Necesito crear el método read en el modelo
+        $this->view->autor = $this->model->read($this->view->id);
+
+        // Creo la propiedad nacionalidades en la vista
+        $this->view->nacionalidades = $this->model->get_nacionalidades();
+
+        // Creo la propiedad premios en la vista
+        $this->view->premios = $this->model->get_premios();
+
+        # cargo la vista
+        $this->view->render('autor/editar/index');
+    }
 }

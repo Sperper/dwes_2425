@@ -352,12 +352,6 @@ class Autor extends Controller
         // Necesito crear el método read en el modelo
         $this->view->autor = $this->model->read($this->view->id);
 
-        // Creo la propiedad nacionalidades en la vista
-        $this->view->nacionalidades = $this->model->get_nacionalidades();
-
-        // Creo la propiedad premios en la vista
-        $this->view->premios = $this->model->get_premios();
-
         # cargo la vista
         $this->view->render('autor/editar/index');
     }

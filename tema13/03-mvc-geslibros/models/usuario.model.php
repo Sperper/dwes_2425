@@ -59,42 +59,8 @@ class usuarioModel extends Model {
     }
 
 
-    public function validateUniqueName($name)
-    {
-
-        try {
-
-            // sentencia sql
-            $sql = "SELECT * FROM Users WHERE name = :name"; 
-
-
-            // conectamos con la base de datos
-            $conexion = $this->db->connect();
-
-            // ejecuto prepare
-            $stmt = $conexion->prepare($sql);
-
-            // vinculamos parámetros
-            $stmt->bindParam(':name', $name, PDO::PARAM_STR, 50);
-
-            // ejecutamos
-            $stmt->execute();
-
-            if ($stmt->rowCount() > 0) {
-                return FALSE;
-            } 
-
-            return TRUE;
-
-        } catch (PDOException $e) {
-
-            // error base de datos
-            require 'template/partials/errorDB.partial.php';
-            $stmt = null;
-            $conexion = null;
-            $this->db = null;
-        }
-    }
+    
+    
 
     /*
         método: validateUniqueEmail()
@@ -531,6 +497,99 @@ class usuarioModel extends Model {
             $stmt->execute();
             return $stmt->fetchAll();
         } catch (PDOException $e) {
+            require 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+        }
+    }
+     /*
+        método: import
+
+        descripción: importa un fichero csv con los datos de los usuarios
+
+        @param: 
+
+            - $usuarios array con los datos del fichero csv
+
+    */
+    public function import($usuarios)
+    {
+
+        try {
+
+            $sql = "INSERT INTO users (
+                name,
+                email,
+                password
+            )
+            VALUES (
+                :name,
+                :email,
+                :password
+            )
+        ";
+            # Conectar con la base de datos
+            $conexion = $this->db->connect();
+
+            $stmt = $conexion->prepare($sql);
+
+            foreach ($usuarios as $usuario) {
+
+                $password = password_hash($usuario[2], PASSWORD_DEFAULT);
+
+                $stmt->bindParam(':name', $usuario[0], PDO::PARAM_STR, 50);
+                $stmt->bindParam(':email', $usuario[1], PDO::PARAM_STR, 50);
+                $stmt->bindParam(':password', $password, PDO::PARAM_STR, 255);
+
+                // añado usuario
+                $stmt->execute();
+            }
+
+            // devuelvo el número de usuarios importados
+            return count($usuarios);
+        } catch (PDOException $e) {
+            // error base de datos
+            require_once 'template/partials/errorDB.partial.php';
+            $stmt = null;
+            $conexion = null;
+            $this->db = null;
+        }
+    }
+
+    /*
+        método: validateUniqueName
+
+        descripción: comprueba si un nombre de usuario ya existe en la base de datos,
+    */
+
+    public function validateUniqueName($name)
+    {
+
+        try {
+
+            // sentencia sql
+            $sql = "SELECT * FROM Users WHERE name = :name"; 
+
+
+            // conectamos con la base de datos
+            $conexion = $this->db->connect();
+
+            // ejecuto prepare
+            $stmt = $conexion->prepare($sql);
+
+            // vinculamos parámetros
+            $stmt->bindParam(':name', $name, PDO::PARAM_STR, 50);
+
+            // ejecutamos
+            $stmt->execute();
+
+
+            return $stmt->rowCount() == 0;
+
+        } catch (PDOException $e) {
+
+            // error base de datos
             require 'template/partials/errorDB.partial.php';
             $stmt = null;
             $conexion = null;

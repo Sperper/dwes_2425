@@ -1,12 +1,8 @@
 <?php
-require('extensions/fpdf/fpdf.php');
 
 
-class PDF_Libros extends FPDF
+class PDF_Usuarios extends FPDF
 {
-    
-
-
     public function Header()
     {
         // Select courier normal tamaño 9
@@ -22,7 +18,7 @@ class PDF_Libros extends FPDF
         $this->Cell(0, 10, '2DAW 24/25', 0, 1, 'C');
 
         // Celda
-        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Lista de Libros - 2DAW - Curso 24/25'), 'B', 1, 'C');
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Lista de Usuarios - 2DAW - Curso 24/25'), 'B', 1, 'C');
 
         // Line break
         $this->Ln(10);
@@ -44,7 +40,7 @@ class PDF_Libros extends FPDF
         $this->SetFillColor(200, 220, 255);
 
         // Escribimos el título
-        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Listado de libros'), 0, 1, 'C', 1);
+        $this->Cell(0, 10, iconv('UTF-8', 'ISO-8859-1', 'Listado de usuarios'), 0, 1, 'C', 1);
 
         // Dejar un espacio de 2 líneas
         $this->Ln(43);
@@ -56,12 +52,10 @@ class PDF_Libros extends FPDF
         $this->SetFillColor(200, 220, 255);
 
         $this->Cell(10, 10, iconv('UTF-8', 'ISO-8859-1', '#'), 1, 0, 'C', 1);
-        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'Titulo'), 1, 0, 'L', 1);
-        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'Autor'), 1, 0, 'L', 1);
-        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'Editorial'), 1, 0, 'L', 1);
-        $this->Cell(14, 10, iconv('UTF-8', 'ISO-8859-1', 'Stock'), 1, 0, 'C', 1);
-        $this->Cell(14, 10, iconv('UTF-8', 'ISO-8859-1', 'Precio'), 1, 1, 'R', 1);
-    }
+        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'Nombre'), 1, 0, 'L', 1);
+        $this->Cell(50, 10, iconv('UTF-8', 'ISO-8859-1', 'Email'), 1, 0, 'L', 1);
+        $this->Cell(80, 10, iconv('UTF-8', 'ISO-8859-1', 'Contraseña'), 1, 0, 'L', 1);
 
-   
+        $this->Ln(10);
+    }
 }

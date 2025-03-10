@@ -312,6 +312,8 @@ class Libro extends Controller
             $error['isbn'] = 'El ISBN es obligatorio';
         } elseif (!filter_var($isbn, FILTER_VALIDATE_REGEXP, $options)) {
             $error['isbn'] = 'El ISBN no es válido';
+        } elseif (!$this->model->validateUniqueISBN($isbn)) {
+            $error['isbn'] = 'El ISBN ya existe';
         }
 
         // Validación del autor
@@ -393,6 +395,8 @@ class Libro extends Controller
 
         // Comprobar si el usuario tiene permisos
         $this->checkPermissions($GLOBALS['libro']['editar']);
+
+      
 
         // Validar token
         $this->checkTokenCsrf($param[1]);
@@ -538,7 +542,7 @@ class Libro extends Controller
 
         // Validación del ISBN
         // Reglas: obligatorio, formato ISBN y clave secundaria
-        if (strcmp($isbn, $libro_form->isbn) != 0) {
+        if (strcmp($this->model->read($id)->fecha_edicion, $libro_form->isbn) != 0) {
             $cambios = true;
             // Expresión regular para validar el DNI
             // 8 números seguidos de una letra
@@ -552,6 +556,8 @@ class Libro extends Controller
                 $error['isbn'] = 'El ISBN es obligatorio';
             } else if (!filter_var($isbn, FILTER_VALIDATE_REGEXP, $options)) {
                 $error['isbn'] = 'Formato ISBN no es correcto';
+            } else if (!$this->model->validateUniqueISBN($libro_form->isbn)) {
+                $error['isbn'] = 'El ISBN ya existe';
             }
         }
 
@@ -559,7 +565,7 @@ class Libro extends Controller
         // Reglas: obligatorio, numérico, clave ajena
         if (empty($id_autor)) {
             $error['id_autor'] = 'El autor es obligatorio';
-        } elseif ($id_autor != $this->model->read($id)->id_autor) {
+        } elseif ($id_autor != $this->model->read($id)->autor_id) {
             $cambios = true;
         }
 
@@ -567,7 +573,7 @@ class Libro extends Controller
         // Reglas: obligatorio, numérico, clave ajena
         if (empty($id_editorial)) {
             $error['id_editorial'] = 'La editorial es obligatoria';
-        } elseif ($id_editorial != $this->model->read($id)->id_editorial) {
+        } elseif ($id_editorial != $this->model->read($id)->editorial_id) {
             $cambios = true;
         }
 
@@ -598,7 +604,7 @@ class Libro extends Controller
             $_SESSION['error'] = $error;
 
             // redireciona al formulario de nuevo
-            header('location:' . URL . 'libro/editar/' . $id);
+            header('location:' . URL . 'libro/editar/' . $id . '/' . $_POST['csrf_token']);
             exit();
         }
 

@@ -446,10 +446,8 @@ class Usuario extends Controller {
         }
 
         // Actualizo los datos del usuario
-        $this->model->update($name, $email, $_SESSION['user_id'], !empty($password) ? password_hash($password, PASSWORD_BCRYPT) : null);
+        $this->model->update($name, $email,$param[0], !empty($password) ? password_hash($password, PASSWORD_BCRYPT) : null);
 
-        // Actualizo el posible nuevo nombre del usuario
-        $_SESSION['user_name'] = $name;
 
         // Genero mensaje de éxito
         $_SESSION['mensaje'] = 'Perfil actualizado correctamente';
@@ -766,15 +764,15 @@ class Usuario extends Controller {
             $usuarios[] = $linea;
 
             // Validar email
-            if (!$this->model->validateUniqueEmail($linea[2])) {
-                $_SESSION['mensaje_error'] = 'El email ' . $linea[2] . ' ya existe';
+            if (!$this->model->validateUniqueEmail($linea[1])) {
+                $_SESSION['mensaje_error'] = 'El email ' . $linea[1] . ' ya existe';
                 header('location:' . URL . 'usuario/importar/csv/' . $_POST['csrf_token']);
                 exit();
             }
 
-            // Validar rol
-            if (!$this->model->validateForeignKeyRole($linea[3])) {
-                $_SESSION['mensaje_error'] = 'El rol ' . $linea[3] . ' no existe';
+            // Validar nombre
+            if (!$this->model->validateUniqueName($linea[0])) {
+                $_SESSION['mensaje_error'] = 'El nombre ' . $linea[0] . ' ya existe';
                 header('location:' . URL . 'usuario/importar/csv/' . $_POST['csrf_token']);
                 exit();
             }
@@ -819,7 +817,7 @@ class Usuario extends Controller {
         $pdf = new PDF_Usuarios('P', 'mm', 'A4');
 
         // Obtengo los usuarios
-        $usuarios = $this->model->get_pdf();
+        $usuarios = $this->model->get();
 
         // Imprimir número página actual
         $pdf->AliasNbPages();
@@ -841,17 +839,16 @@ class Usuario extends Controller {
         $fondo = false;
         // Escribimos los datos de los usuarios
         foreach ($usuarios as $usuario) {
-
             if ($pdf->GetY() > 260) {
                 $pdf->AddPage();
                 $pdf->cabecera();
                 $pdf->SetFillColor(205,205,205); 
             }
 
-            $pdf->Cell(10, 8, mb_convert_encoding($usuario['id'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'C', $fondo);
-            $pdf->Cell(50, 8, mb_convert_encoding($usuario['nombre'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
-            $pdf->Cell(50, 8, mb_convert_encoding($usuario['email'], 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
-            $pdf->Cell(50, 8, mb_convert_encoding($usuario['rol'], 'ISO-8859-1', 'UTF-8'), 1, 1, 'L', $fondo);
+            $pdf->Cell(10, 8, mb_convert_encoding($usuario->id, 'ISO-8859-1', 'UTF-8'), 1, 0, 'C', $fondo);
+            $pdf->Cell(50, 8, mb_convert_encoding($usuario->name, 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
+            $pdf->Cell(50, 8, mb_convert_encoding($usuario->email, 'ISO-8859-1', 'UTF-8'), 1, 0, 'L', $fondo);
+            $pdf->Cell(80, 8, mb_convert_encoding($usuario->password, 'ISO-8859-1', 'UTF-8'), 1, 1, 'L', $fondo);
 
             $fondo = !$fondo;
         }

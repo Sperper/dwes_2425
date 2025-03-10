@@ -27,8 +27,8 @@
                 <h5 class="card-title"><?= htmlspecialchars($this->title) ?></h5>
             </div>
             <div class="card-body">
-                <!-- Formulario de autores  -->
-                <form action="<?= URL ?>autor/validar/csv" method="POST" enctype="multipart/form-data">
+                <!-- Formulario de usuarios  -->
+                <form action="<?= URL ?>usuario/validar/csv" method="POST" enctype="multipart/form-data">
 
                     <!-- protección CSRF -->
                     <input type="hidden" name="csrf_token"
@@ -41,7 +41,7 @@
             </div>
             <div class="card-footer">
                 <!-- botones de acción -->
-                <a class="btn btn-secondary" href="<?= URL ?>autor" role="button"
+                <a class="btn btn-secondary" href="<?= URL ?>usuario" role="button"
                     onclick="return confirm('¿Estás seguro de que deseas cancelar? Se perderán los datos ingresados.')">Cancelar</a>
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </div>

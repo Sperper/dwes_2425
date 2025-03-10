@@ -250,6 +250,16 @@ class Autor extends Controller
             $error['fecha_nac'] = 'La fecha de nacimiento es obligatoria';
         }
 
+        // Validación del email
+        // Reglas: obligatorio, formato email
+        if (empty($email)) {
+            $error['email'] = 'El email es obligatorio';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $error['email'] = 'El email no es válido';
+        } elseif (!$this->model->validateUniqueEmail($email)) {
+            $error['email'] = 'El email ya existe';
+        }
+
         // Validación de la fecha de defunción
         // Reglas: opcional
         if (!empty($fecha_def) && !strtotime($fecha_def)) {
@@ -273,10 +283,6 @@ class Autor extends Controller
 
             // Redirecciono al formulario de nuevo
             header('location:' . URL . 'autor/nuevo/' . $_SESSION['csrf_token']);
-
-            //
-            // redireciona al main de autor
-            header('location:' . URL . 'autor');
             exit();
         }
 
@@ -428,7 +434,10 @@ class Autor extends Controller
             $error['email'] = 'El email no es válido';
         } elseif ($email != $this->model->read($id)->email) {
             $cambios = true;
-        }
+            if (!$this->model->validateUniqueEmail($email)) {
+                $error['email'] = 'El email ya existe';
+            }
+        } 
 
         // Validación de la fecha de nacimiento
         if (empty($fecha_nac)) {

@@ -19,6 +19,11 @@
         <li class="nav-item">
           <a class="nav-link active" href="<?= URL ?>autor">Autores</a>
         </li>
+        <?php if ($_SESSION['role_id'] == 1): ?>
+        <li class="nav-item">
+          <a class="nav-link active" href="<?= URL ?>usuario">Usuarios</a>
+        </li>
+        <?php endif; ?>
         <!-- <li class="nav-item">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Link</a>
         </li> -->

@@ -38,9 +38,11 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/1/<?= $_SESSION['csrf_token'] ?>">Id</a></li>
                         <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/2/<?= $_SESSION['csrf_token'] ?>">Nombre</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/3/<?= $_SESSION['csrf_token'] ?>">Apellido</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/4/<?= $_SESSION['csrf_token'] ?>">Fecha de Nacimiento</a></li>
-                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/5/<?= $_SESSION['csrf_token'] ?>">Nacionalidad</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/3/<?= $_SESSION['csrf_token'] ?>">Nacionalidad</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/4/<?= $_SESSION['csrf_token'] ?>">Email</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/5/<?= $_SESSION['csrf_token'] ?>">Fecha de Nacimiento</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/6/<?= $_SESSION['csrf_token'] ?>">Fecha de Defunción</a></li>
+                        <li><a class="dropdown-item" href="<?= URL ?>autor/ordenar/7/<?= $_SESSION['csrf_token'] ?>">Premios</a></li>
                     </ul>
                 </li>
             </ul>

@@ -29,44 +29,43 @@
                     <!-- id -->
                     <div class="mb-3">
                         <label for="id" class="form-label">Id</label>
-                        <input type="number" class="form-control" value="<?= htmlspecialchars($this->libro->id) ?>" disabled>
+                        <input type="number" class="form-control" value="<?= htmlspecialchars($this->autor->id) ?>" disabled>
                     </div>
 
                     <!-- Nombre -->
                     <div class="mb-3">
-                        <label for="nombre" class="form-label">Titulo</label>
-                        <input type="text" class="form-control" value="<?= htmlspecialchars($this->libro->titulo) ?>" disabled>
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" value="<?= htmlspecialchars($this->autor->nombre) ?>" disabled>
                     </div>
-                    <!-- Apellidos -->
+
+                    <!-- Nacionalidad -->
                     <div class="mb-3">
-                        <label for="apellidos" class="form-label">Precio</label>
-                        <input type="text" class="form-control" value="<?= htmlspecialchars($this->libro->precio) ?>" disabled>
-                    </div>
-                    <!-- Fecha Nacimiento -->
-                    <div class="mb-3">
-                        <label for="fechaNac" class="form-label">Fecha Edicion</label>
-                        <input type="date" class="form-control" value="<?= htmlspecialchars($this->libro->fecha_edicion) ?>" disabled>
-                    </div>
-                    <!-- Dni -->
-                    <div class="mb-3">
-                        <label for="dni" class="form-label">ISBN</label>
-                        <input type="text" class="form-control" value="<?= htmlspecialchars($this->libro->isbn) ?>" disabled>
+                        <label for="nacionalidad" class="form-label">Nacionalidad</label>
+                        <input type="text" class="form-control" value="<?= htmlspecialchars($this->autor->nacionalidad) ?>" disabled>
                     </div>
 
                     <!-- Email -->
                     <div class="mb-3">
-                        <label for="email" class="form-label">Autor</label>
-                        <input type="email" class="form-control" value="<?= htmlspecialchars($this->autores[$this->libro->autor_id]) ?>" disabled>
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" value="<?= htmlspecialchars($this->autor->email) ?>" disabled>
                     </div>
-                    <!-- Telefono -->
+
+                    <!-- Fecha Nacimiento -->
                     <div class="mb-3">
-                        <label for="telefono" class="form-label">Editorial</label>
-                        <input type="tel" class="form-control" value="<?= htmlspecialchars($this->editoriales[$this->libro->editorial_id]) ?>" disabled>
+                        <label for="fechaNac" class="form-label">Fecha Nacimiento</label>
+                        <input type="date" class="form-control" value="<?= htmlspecialchars($this->autor->fecha_nac) ?>" disabled>
                     </div>
-                    <!-- Nacionalidad -->
+
+                    <!-- Fecha Defuncion -->
                     <div class="mb-3">
-                        <label for="nacionalidad" class="form-label">Generos</label>
-                        <input type="text" class="form-control" value="<?= htmlspecialchars($this->libro->generos_id) ?>" disabled>
+                        <label for="fechaDef" class="form-label">Fecha Defuncion</label>
+                        <input type="date" class="form-control" value="<?= htmlspecialchars($this->autor->fecha_def) ?>" disabled>
+                    </div>
+
+                    <!-- Premios -->
+                    <div class="mb-3">
+                        <label for="premios" class="form-label">Premios</label>
+                        <input type="text" class="form-control" value="<?= htmlspecialchars($this->autor->premios) ?>" disabled>
                     </div>
 
                     

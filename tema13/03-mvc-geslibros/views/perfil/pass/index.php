@@ -28,20 +28,8 @@
                             <!-- token crsf -->
                             <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
 
-                            <!-- campo password actual -->
-                            <div class="mb-3 row">
-                                <label for="password" class="col-md-4 col-form-label text-md-right">Password
-                                    actual</label>
-                                <div class="col-md-6">
-                                    <input id="password" type="password"
-                                        class="form-control <?= (isset($this->errores['password'])) ? 'is-invalid' : null ?>"
-                                        name="password" required autocomplete="password" autofocus>
-                                    <!-- control de errores -->
-                                    <span class="form-text text-danger" role="alert">
-                                        <?= $this->error['password'] ??= '' ?>
-                                    </span>
-                                </div>
-                            </div>
+                            # obtener objeto de la clase libro con el id asociado
+        $this->view->libro = $this->model->read($this->view->id);
                             <!-- campo nuevo password -->
                             <div class="mb-3 row">
                                 <label for="new_password" class="col-md-4 col-form-label text-md-right">Nuevo

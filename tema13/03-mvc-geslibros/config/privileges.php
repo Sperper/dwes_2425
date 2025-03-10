@@ -53,3 +53,15 @@
     $GLOBALS['autor']['exportar'] = [1];
     $GLOBALS['autor']['importar'] = [1];
     $GLOBALS['autor']['pdf'] = [1, 2];
+
+    // Definimos los privilegios del controlador usuario
+    $GLOBALS['usuario']['main'] = [1];
+    $GLOBALS['usuario']['nuevo'] = [1];
+    $GLOBALS['usuario']['editar'] = [1];
+    $GLOBALS['usuario']['eliminar'] = [1];
+    $GLOBALS['usuario']['mostrar'] = [1];
+    $GLOBALS['usuario']['filtrar'] = [1];
+    $GLOBALS['usuario']['ordenar'] = [1];
+    $GLOBALS['usuario']['exportar'] = [1];
+    $GLOBALS['usuario']['importar'] = [1];
+    $GLOBALS['usuario']['pdf'] = [1];
